@@ -8,6 +8,7 @@ using WorkOrderWizard.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text;
+using Microsoft.Reporting.WebForms;
 
 
 namespace WorkOrderWizard.Controllers
@@ -101,7 +102,7 @@ namespace WorkOrderWizard.Controllers
 
 
         [HttpPost]
-        public JsonResult GetWorkOrders(int MaxRecordCount)
+        public JsonResult GetWorkOrders(int MaxRecordCount, bool isDownloadReport = false)
         {
             int totalRecordCount, searchRecordCount, intMaxRecordCount;
             JQueryDataTablesModel jQueryDataTablesModel;
@@ -128,83 +129,75 @@ namespace WorkOrderWizard.Controllers
             return result;
         }
 
-        [HttpPost]
-        public JsonResult GetWorkOrdersByParams()
+        public ActionResult GetWorkOrders(bool isDownloadReport)
         {
-            var result = new JsonResult();
-            return result;
-        }
+            int totalRecordCount, searchRecordCount;
+            JQueryDataTablesModel jQueryDataTablesModel;
 
 
+            //Populate my jQueryDataTablesModel by using the static method..
+            jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
 
-        public ActionResult Index()
-        {
+            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
+
+            var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0,
+                totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: isDownloadReport);
+
+            RenderWorkOrderReport(objItems);
+
             return View();
         }
 
-        public ActionResult Details(int id)
+        private void RenderWorkOrderReport(IList<WorkOrder> objItems)
         {
-            return View();
-        }
+            string strReportType = "Excel";
+            LocalReport objLocalReport;
+            ReportDataSource WorkOrderDataSource;
+            string mimeType;
+            string encoding;
+            string fileNameExtension;
+            string deviceInfo = "";
+            Warning[] warnings;
+            string[] streams;
 
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
+            objLocalReport = new LocalReport { ReportPath = Server.MapPath(Settings.ReportDirectory + "WorkOrders.rdlc") };
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            //Give the reportdatasource a name so that we can reference it in our report designer
+            WorkOrderDataSource = new ReportDataSource("WorkOrders", objItems);
 
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            objLocalReport.DataSources.Add(WorkOrderDataSource);
+            objLocalReport.Refresh();
 
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
+            //The DeviceInfo settings should be changed based on the reportType
+            //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
+            deviceInfo = string.Format(
+                        "<DeviceInfo>" +
+                        "<OmitDocumentMap>True</OmitDocumentMap>" +
+                        "<OmitFormulas>True</OmitFormulas>" +
+                        "<SimplePageHeaders>True</SimplePageHeaders>" +
+                        "</DeviceInfo>", strReportType);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            //Render the report
+            var renderedBytes = objLocalReport.Render(
+                strReportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
 
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            //Clear the response stream and write the bytes to the outputstream
+            //Set content-disposition to "attachment" so that user is prompted to take an action
+            //on the file (open or save)
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.ContentType = mimeType;
+            Response.AddHeader("content-disposition", "attachment; filename=WorkOrders" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "." + fileNameExtension);
+            Response.BinaryWrite(renderedBytes);
+            Response.End();
         }
     }
 }

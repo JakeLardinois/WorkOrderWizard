@@ -60,5 +60,6 @@ namespace WorkOrderWizard.Models
     public static class Settings
     {
         public static string WorkOrderPrefix { get { return System.Configuration.ConfigurationManager.AppSettings["WorkOrderPrefix"]; } }
+        public static string ReportDirectory { get { return System.Configuration.ConfigurationManager.AppSettings["ReportDirectory"]; } }
     }
 }

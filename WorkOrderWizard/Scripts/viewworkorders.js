@@ -1,5 +1,5 @@
 ﻿var anOpen = [];
-var oVRequestTable;
+var oTable;
 var intMaxRecordCount = 200;
 var blnCheckChanged;
 
@@ -20,15 +20,17 @@ TableTools.BUTTONS.download = {
     "sDiv": "",
     "fnMouseover": null,
     "fnMouseout": null,
-    "fnClick": function (nButton, oConfig) {
+    "fnClick": null,
+    /*"fnClick": function (nButton, oConfig) {
         var oParams = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
         var iframe = document.createElement('iframe');
         iframe.style.height = "0px";
         iframe.style.width = "0px";
-        oParams.push({ "name": "MaxRecordCount", "value": intMaxRecordCount });
+        oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
+        oParams.push({ "name": "isDownloadReport", "value": true });
         iframe.src = oConfig.sUrl + "?" + $.param(oParams);
         document.body.appendChild(iframe);
-    },
+    },*/
     "fnSelect": null,
     "fnComplete": null,
     "fnInit": null
@@ -105,7 +107,7 @@ $(document).ready(function () {
     /*I wanted to avoid a query in the situation where a user just opens the select box to observe the checked values. So I created a global variable that gets set only when a user
      * checks/unchecks an option or CheckAll or UnCheckAll.*/
     $("select").multiselect({ //makes all the selects multiselect boxes AND applies the specified methods...
-        hide: "explode",
+        //hide: "explode",
         checkAll: function () {
             blnCheckChanged = true;
         },
@@ -118,17 +120,17 @@ $(document).ready(function () {
         close: function () {
             if (blnCheckChanged) {
                 blnCheckChanged = false;
-                oVRequestTable.draw();
+                oTable.draw();
             }
         }
     });
 
-    oVRequestTable = $('#objItems').DataTable({
+    oTable = $('#objItems').DataTable({
         "bJQueryUI": true,
         "bProcessing": true,
         "bServerSide": true,
         "bFilter": true,
-        "sDom": '<"clear">RlrtTip', //The 'R' enables column reorder with resize; UPDATE took out the f from "Rlfrtip" to hide the search textbox
+        "sDom": '<"clear">RlrtTip', //The 'R' enables column reorder with resize; UPDATE took out the f from "Rlfrtip" to hide the search textbox, T gives all the buttons
         "oTableTools": {
             sRowSelect: "os", //enables the selection of rows //"multi" enables the selection of multiple rows
             sRowSelector: 'td:first-child', //sets the first column of the row as the one to select the row
@@ -136,11 +138,48 @@ $(document).ready(function () {
                 {
                     "sExtends": "download",
                     "sButtonText": "Excel Download",
-                    "sUrl": sPrintWorkOrdersUrl //+ "?MaxRecordCount=" + intMaxRecordCount // "/generate_csv.php"
-                }
+                    "sUrl": sGetWorkOrdersUrl, //+ "?&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
+                    "fnClick": function (nButton, oConfig) {
+                        var oUrlParams = [];
+                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                        
+                        oUrlParams.push({ "name": "MaxRecordCount", "value": 0 });
+                        oUrlParams.push({ "name": "isDownloadReport", "value": true });
+                        
+                        //var iframe = document.createElement('iframe');
+                        //iframe.style.height = "0px";
+                        //iframe.style.width = "0px";
+                        ////oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
+                        //oParams.push({ "name": "isDownloadReport", "value": true });
+                        //iframe.src = oConfig.sUrl + "?" + $.param(oParams); //parameterizes the json array oParams (aka aoData) and appends it to the URL...
+                        //document.body.appendChild(iframe);
+                        $.ajax({  //This is the setting that does the posting of the data...
+                            "dataType": 'json',
+                            "type": "POST",
+                            "url": oConfig.sUrl + "?" + $.param(oUrlParams), //parameterizes the json array oParams (aka aoData) and appends it to the URL...
+                            "data": aoData
+                            //"success": fnCallback
+                        });
+                    },
+                },
+                /*{
+                    "sExtends": "download",
+                    "sButtonText": "Bitchin Download",
+                    "sUrl": sGetWorkOrdersUrl + "?&MaxRecordCount=0&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
+                    "fnClick": function (nButton, oConfig) {
+                        var oParams = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                        var iframe = document.createElement('iframe');
+                        iframe.style.height = "0px";
+                        iframe.style.width = "0px";
+                        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
+                        //oParams.push({ "name": "isDownloadReport", "value": true });
+                        iframe.src = oConfig.sUrl + "?" + $.param(oParams);
+                        document.body.appendChild(iframe);
+                    },
+                }*/
             ]
         },
-        "sScrollX": "100%",
+        //"sScrollX": "100%",
         "oColReorder": {
             "iFixedColumns": 3 //specifies that the first n columns are not reorderable...
         },
@@ -162,7 +201,7 @@ $(document).ready(function () {
                  * I had previously implemented this in the server side code, but then any time my UI changed I would need to recompile the web service... So I fixed the implementation...*/
                 aoData.push({
                     "name": "FixedColumnHeaders",
-                    "value": ["WONUM", "0", "WOEQLIST", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
+                    "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
                 });
 
                 /*iterates through the array and updates the appropriate object using the below 'case' statements. I was having an issue where sSearch was getting populated twice (ie sSearch_4 & sSearch_7 would contain the same search string) 
@@ -175,14 +214,14 @@ $(document).ready(function () {
                         case "bRegex_0":
                             aoData[i].value = true;
                             break;
-                        case "sSearch_2":
+                        case "sSearch_1":
                             strTemp = String($('#WOEQLISTFilter').val());
                             if (strTemp !== 'null')
                                 aoData[i].value = strTemp.split(',').join('|');
                             else
                                 aoData[i].value = '';
                             break;
-                        case "bRegex_2":
+                        case "bRegex_1":
                             aoData[i].value = true;
                             break;
                         case "sSearch_3":
@@ -251,15 +290,19 @@ $(document).ready(function () {
         "aoColumns": [
             { "mDataProp": "WONUM" },
             {
-                "mDataProp": null, //Note that I had a problem with this column being first because when the datatable loads, it automatically sorts based on the first column; since this column had a null value
-                orderable: false, //it would pass that null value to the data call. I actually fixed this by modifying the code in InMemoryRepositories.cs so that if there was an error, it just returns the list
-                "sClass": "control center",
+                "mDataProp": null,
+                //"sWidth": 60,
+                "bSortable": false,
+                //"bSearchable": false,
+                "sClass": "equip center",
                 "sDefaultContent": '<img src="' + sOpenImageUrl + '">'
             },
             {
                 "mDataProp": null, //Note that I had a problem with this column being first because when the datatable loads, it automatically sorts based on the first column; since this column had a null value
-                orderable: false, //it would pass that null value to the data call. I actually fixed this by modifying the code in InMemoryRepositories.cs so that if there was an error, it just returns the list
-                "sClass": "control center",
+                "sWidth": 60,
+                "sClass": "desc center", //applies the control class to the cell and the center class(which center aligns the image)
+                "bSortable": false,
+                "bSearchable": false,
                 "sDefaultContent": '<img src="' + sOpenImageUrl + '">'
             },
             { "mDataProp": "STATUS" },
@@ -286,9 +329,105 @@ $(document).ready(function () {
             }]
     });
 
+    $('#objItems tbody').on('click', 'td.equip', function () {
+        var nTr;
+        var i;
+        var rowIndex;
+        var nDetailsRow;
+        var sEquipTableName;
+
+
+        nTr = this.parentNode;
+        i = $.inArray(nTr, anOpen);
+
+        rowIndex = oTable.row(nTr).index(); //get the index of the current row
+        sEquipTableName = 'dtEquipTable' + rowIndex;
+
+        if (i === -1) { //the datatable is opening the row...
+            $('img', this).attr('src', sCloseImageUrl);
+            nDetailsRow = oTable.row(nTr).child(GetEquipTableHTML(oTable, nTr, sEquipTableName), 'details').show();
+            $('div.innerDetails', nDetailsRow).slideDown();
+            anOpen.push(nTr);
+
+
+            var tInnerTable = $('#' + sEquipTableName).DataTable({ //when referencing the table for it's api, it always wants to be prefaced with #
+                //"bProcessing": true,
+                "bJQueryUI": true,
+                "aaData": oTable.row(rowIndex).data().WOEQLIST,
+                "sDom": "Rlfrtip", //Enables column reorder with resize
+                //"sDom": '<"top">rt<"bottom"flp><"clear">', //hides the filter box and the 'showing recordno of records' message
+                "bFilter": false,   //hides the search box
+                "bPaginate": false, //disables paging functionality
+                //"bServerSide": true,
+                //"sAjaxSource": sLineURL + '?&OrderNo=' + sOrderNo, //pass the order number to the orderline url as a querystring; note query string variables are delimited by &
+                //"sServerMethod": "POST", 
+                "aoColumns": [
+                    {
+                        "mDataProp": "EQNUM",
+                        "sWidth": 60,
+                    },
+                    { "mDataProp": "EQDESC" },
+                    { "mDataProp": "LOCATION" },
+                    { "mDataProp": "SUBLOCATION1" },
+                    { "mDataProp": "DEPARTMENT" }]
+
+            });
+        }
+        else { //the datatable is closing the row...
+            //$(sEquipTableName).remove(); //I didn't need to remove the datatable once I was dynamically naming them based on row number
+
+            $('img', this).attr('src', sOpenImageUrl);
+            $('div.innerDetails', $(nTr).next()[0]).slideUp(function () {
+                oTable.row(nTr).child.hide();
+                anOpen.splice(i, 1);
+            });
+        }
+    });
+
+    $('#objItems tbody').on('click', 'td.desc', function () {
+        var nTr;
+        var i;
+        var rowIndex;
+        var oObj;
+
+
+        nTr = this.parentNode;
+        i = $.inArray(nTr, anOpen);
+
+        rowIndex = oTable.row(nTr).index(); //get the index of the current row
+
+        oObj = oTable.row(rowIndex).data(); //get the WorkOrder object
+
+        sHTML =
+        '<table>' +
+            '<tbody>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div>' +
+                            oObj.TASKDESC +
+                        '</div>' +
+                    '</td>' +
+                '</tr>' +
+            '</tbody>' +
+        '</table>';
+
+        $("#DescriptionDialogDiv").html(sHTML);
+
+        // Open this Datatable as a modal dialog box.
+        $('#DescriptionDialogDiv').dialog({
+            modal: false,
+            resizable: true,
+            position: 'center',
+            //width: 'auto', //By not setting the width here, the width stays at whatever the user sets whenever they click on a new address.
+            autoResize: true,
+            title: 'Work Order: ' + oObj.WONUM
+        });
+
+    });
+
     //This is so that you can cause a search to occur on keyup for input field by adding class="dtSearchField" to it's html...
     $('input.dtSearchField').on('keyup change', function () {
-        oVRequestTable.draw(); //forces the table to redraw and the search criteria is set above
+        oTable.draw(); //forces the table to redraw and the search criteria is set above
     });
 });
 
@@ -336,4 +475,36 @@ function FormatWOEquipmentSelectColumnJSON(x) {
     }
 
     return finalEdit;
+}
+
+function loadWODescDialog(oObj) {
+    var strAddr;
+    var sHTML;
+    var dataValues;
+
+
+    sHTML =
+        '<table>' +
+            '<tbody>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div>' +
+                            oObj.TASKDESC +
+                        '</div>' +
+                    '</td>' +
+                '</tr>' +
+            '</tbody>' +
+        '</table>';
+
+    $("#DescriptionDialogDiv").html(sHTML);
+
+    // Open this Datatable as a modal dialog box.
+    $('#DescriptionDialogDiv').dialog({
+        modal: false,
+        resizable: true,
+        position: 'center',
+        //width: 'auto', //By not setting the width here, the width stays at whatever the user sets whenever they click on a new address.
+        autoResize: true,
+        title: 'Work Order: ' + oObj.WONUM
+    });
 }
