@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/multiselect")
+    @Styles.Render("~/Content/impromptu")
+
+    @RenderSection("styles", false)
+</head>
+<body>
+
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryvalidate")
+    @Scripts.Render("~/bundles/jqueryvalidateAdditionalMethods")
+    @Scripts.Render("~/bundles/themeswitcher")
+    @Scripts.Render("~/bundles/multiselect")
+    @Scripts.Render("~/bundles/impromptu")
+    @Scripts.Render("~/bundles/autogrow")
+    @Scripts.Render("~/bundles/datetimeformatter")
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

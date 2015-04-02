@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>\\server2008\c$\inetpub\WebApplications\WorkOrders</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>03/09/2015 09:56:39</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>03/09/2015 09:56:27</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>03/09/2015 09:56:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Mvc.FixedDisplayModes.dll">
+      <publishTime>03/09/2015 09:56:36</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/23/2015 13:53:52</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>03/23/2015 13:53:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>03/23/2015 13:53:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>03/23/2015 13:53:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>03/09/2015 09:56:36</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>03/09/2015 09:56:38</publishTime>
+    </File>
+    <File Include="bin/System.Web.Providers.dll">
+      <publishTime>03/09/2015 09:56:38</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>03/09/2015 09:56:35</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>03/09/2015 09:56:36</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>03/09/2015 09:56:36</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>03/09/2015 09:56:36</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>03/09/2015 09:56:39</publishTime>
+    </File>
+    <File Include="bin/WorkOrderWizard.dll">
+      <publishTime>03/30/2015 11:56:57</publishTime>
+    </File>
+    <File Include="bin/WorkOrderWizard.pdb">
+      <publishTime>03/30/2015 11:56:57</publishTime>
+    </File>
+    <File Include="Content/html5-reset.css">
+      <publishTime>03/01/2014 08:20:36</publishTime>
+    </File>
+    <File Include="Content/images/buttonbg.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/icon_color_arrow.gif">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/menuhoverbg.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_black_matte.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_black_tie.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_blitzer.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_cupertino.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_dark_hive.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_dot_luv.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_eggplant.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_excite_bike.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_flick.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_hot_sneaks.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_humanity.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_le_frog.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_mint_choco.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_overcast.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_pepper_grinder.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_smoothness.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_south_street.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_start_menu.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_sunny.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_swanky_purse.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_trontastic.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_ui_dark.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_ui_light.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/images/theme_90_windoze.png">
+      <publishTime>08/06/2014 12:02:10</publishTime>
+    </File>
+    <File Include="Content/jquery-impromptu.css">
+      <publishTime>03/23/2015 12:23:03</publishTime>
+    </File>
+    <File Include="Content/jquery.multiselect.css">
+      <publishTime>03/26/2015 09:19:29</publishTime>
+    </File>
+    <File Include="Content/jquery.multiselect.filter.css">
+      <publishTime>03/26/2015 08:06:59</publishTime>
+    </File>
+    <File Include="Content/reset.css">
+      <publishTime>10/14/2013 13:48:57</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>03/30/2015 16:16:45</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>03/09/2015 09:56:23</publishTime>
+    </File>
+    <File Include="Models/Syteline.edmx.diagram">
+      <publishTime>03/26/2015 10:56:08</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>03/23/2015 13:53:57</publishTime>
+    </File>
+    <File Include="Scripts/autogrow.js">
+      <publishTime>08/12/2014 05:40:14</publishTime>
+    </File>
+    <File Include="Scripts/jquery-impromptu.js">
+      <publishTime>03/23/2015 12:23:03</publishTime>
+    </File>
+    <File Include="Scripts/jquery.multiselect.filter.js">
+      <publishTime>03/26/2015 06:57:34</publishTime>
+    </File>
+    <File Include="Scripts/jquery.multiselect.js">
+      <publishTime>08/19/2014 06:11:06</publishTime>
+    </File>
+    <File Include="Scripts/jquery.themeswitcher.js">
+      <publishTime>03/23/2015 11:59:02</publishTime>
+    </File>
+    <File Include="Scripts/workorders.js">
+      <publishTime>03/30/2015 16:43:37</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>03/26/2015 10:51:33</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>03/09/2015 09:56:23</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>03/30/2015 11:56:57</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>03/09/2015 09:56:23</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>03/09/2015 09:56:23</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>03/30/2015 16:44:39</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

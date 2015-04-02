@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Create Work Orders";
+}
+
+<h2>Work Order Wizard</h2>
+
+<input type="submit" value="Launch the Work Order Wizard">
+
+@section Scripts{
+    <script type="text/javascript">
+        var sImagesURL = '@Url.Content("~/Content/images/")';
+        var sWOTypesURL = '@Url.Action("WorkOrderTypes", "MP2")';
+        var sWOEquipmentListURL = '@Url.Action("EquipmentList", "MP2")';
+        var sCreateWOURL = '@Url.Action("CreateWorkOrder", "MP2")';
+        var sSLEmployeeLookupURL = '@Url.Action("GetSLEmployee", "MP2")';
+
+    </script>
+    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/createworkorders")">
+    </script>
+}
