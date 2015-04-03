@@ -7,6 +7,9 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
+using WorkOrderWizard.Models;
+
+
 namespace WorkOrderWizard
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -22,6 +25,10 @@ namespace WorkOrderWizard
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Lets MVC know that anytime there is a JQueryDataTablesModel as a parameter in an action to use the
+            // JQueryDataTablesModelBinder when binding the model.
+            ModelBinders.Binders.Add(typeof(JQueryDataTablesModel), new JQueryDataTablesModelBinder());
         }
     }
 }

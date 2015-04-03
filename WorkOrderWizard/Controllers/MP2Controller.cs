@@ -100,9 +100,8 @@ namespace WorkOrderWizard.Controllers
             return result;
         }
 
-
         [HttpPost]
-        public JsonResult GetWorkOrders(int MaxRecordCount, bool isDownloadReport = false)
+        public JsonResult GetWorkOrders(int MaxRecordCount)
         {
             int totalRecordCount, searchRecordCount, intMaxRecordCount;
             JQueryDataTablesModel jQueryDataTablesModel;
@@ -117,7 +116,6 @@ namespace WorkOrderWizard.Controllers
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(MaxRecordCount,
                 totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
 
-
             result.Data = new
             {
                 iTotalRecords = totalRecordCount,
@@ -129,23 +127,18 @@ namespace WorkOrderWizard.Controllers
             return result;
         }
 
-        public ActionResult GetWorkOrders(bool isDownloadReport)
+        [HttpGet]
+        public ActionResult GetWorkOrders(JQueryDataTablesModel jQueryDataTablesModel)
         {
             int totalRecordCount, searchRecordCount;
-            JQueryDataTablesModel jQueryDataTablesModel;
-
-
-            //Populate my jQueryDataTablesModel by using the static method..
-            jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
 
             InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0,
-                totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: isDownloadReport);
+                totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
 
             RenderWorkOrderReport(objItems);
-
-            return View();
+            return View();  //note that this is never reached since RenderWorkOrderReport writes to the response stream
         }
 
         private void RenderWorkOrderReport(IList<WorkOrder> objItems)

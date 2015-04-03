@@ -140,26 +140,29 @@ $(document).ready(function () {
                     "sButtonText": "Excel Download",
                     "sUrl": sGetWorkOrdersUrl, //+ "?&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
                     "fnClick": function (nButton, oConfig) {
-                        var oUrlParams = [];
                         var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
                         
-                        oUrlParams.push({ "name": "MaxRecordCount", "value": 0 });
-                        oUrlParams.push({ "name": "isDownloadReport", "value": true });
-                        
-                        //var iframe = document.createElement('iframe');
-                        //iframe.style.height = "0px";
-                        //iframe.style.width = "0px";
-                        ////oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
-                        //oParams.push({ "name": "isDownloadReport", "value": true });
-                        //iframe.src = oConfig.sUrl + "?" + $.param(oParams); //parameterizes the json array oParams (aka aoData) and appends it to the URL...
-                        //document.body.appendChild(iframe);
-                        $.ajax({  //This is the setting that does the posting of the data...
-                            "dataType": 'json',
-                            "type": "POST",
-                            "url": oConfig.sUrl + "?" + $.param(oUrlParams), //parameterizes the json array oParams (aka aoData) and appends it to the URL...
-                            "data": aoData
-                            //"success": fnCallback
+                        //aoData.push({ "name": "MaxRecordCount", "value": 0 });
+                        //aoData.push({ "name": "isDownloadReport", "value": true });
+                        aoData.push({
+                            "name": "FixedColumnHeaders",
+                            "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
                         });
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.height = "0px";
+                        iframe.style.width = "0px";
+                        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
+                        //oParams.push({ "name": "isDownloadReport", "value": true });
+                        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL...
+                        document.body.appendChild(iframe);
+                        /*$.ajax({  //This is the setting that does the posting of the data...
+                            "dataType": 'json',
+                            "type": "GET",
+                            "url": oConfig.sUrl + "?" + $.param(aoData), //parameterizes the json array oParams (aka aoData) and appends it to the URL...
+                            //"data": aoData
+                            //"success": fnCallback
+                        });*/
                     },
                 },
                 /*{
