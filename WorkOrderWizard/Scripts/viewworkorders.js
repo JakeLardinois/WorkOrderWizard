@@ -144,17 +144,17 @@ $(document).ready(function () {
                         
                         //aoData.push({ "name": "MaxRecordCount", "value": 0 });
                         //aoData.push({ "name": "isDownloadReport", "value": true });
-                        aoData.push({
-                            "name": "FixedColumnHeaders",
-                            "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
-                        });
+                        
+                        AppendAdditionalParameters(aoData);
 
+                        /*I tried to use $.ajax to do an HTTP GET for downloading the excel file, but for some reason I couldn't get my response stream to render the excel file as a download
+                        So I had to issue my HTTP GET using the iframe method below for creating the HTTP GET */
                         var iframe = document.createElement('iframe');
                         iframe.style.height = "0px";
                         iframe.style.width = "0px";
                         //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
                         //oParams.push({ "name": "isDownloadReport", "value": true });
-                        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL...
+                        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
                         document.body.appendChild(iframe);
                         /*$.ajax({  //This is the setting that does the posting of the data...
                             "dataType": 'json',
@@ -190,95 +190,13 @@ $(document).ready(function () {
         "sAjaxSource": sGetWorkOrdersUrl + '?&MaxRecordCount=' + intMaxRecordCount,// document.URL,
         "sServerMethod": "POST",
         "fnServerData": function (sSource, aoData, fnCallback, oSettings) {
-
             window.clearTimeout(oTimerId); //clear the timer if it still exists
             oTimerId = window.setTimeout(function () {
                 var strTemp;
 
 
                 //aoData.push({ "name": "MaxRecordCount", "value": intMaxRecordCount }); //adds the MaxRecordCount data to the array sent to the server...
-
-                /*I add the FixedColumnHeaders list to the data array that is sent to the server. This is a custom implementation to accomodate the fact that when datatables implements reorderable columns, the sSearch
-                 * variables get sent to the server based on the old column position whereas mDataProp gets sent based on the new column position. I am then unable to implement a multicolumn search because the data property and
-                 * search property don't align. So I send this FixedColumnHeaders to the server for use in searching based on the corresponding Ssearch variables. This list must match exactly the columns in DataTables table instantiation. 
-                 * I had previously implemented this in the server side code, but then any time my UI changed I would need to recompile the web service... So I fixed the implementation...*/
-                aoData.push({
-                    "name": "FixedColumnHeaders",
-                    "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
-                });
-
-                /*iterates through the array and updates the appropriate object using the below 'case' statements. I was having an issue where sSearch was getting populated twice (ie sSearch_4 & sSearch_7 would contain the same search string) 
-                 * I solved the issue by manually setting sSearch in my aoData array below. Note that I populate the corresponding bRegex variable; this value isn't used anywhere but could be for future implementations...*/
-                for (var i = 0; i < aoData.length; i++) {
-                    switch (aoData[i].name) {
-                        case "sSearch_0":
-                            aoData[i].value = $('#WONUMFilter').val();
-                            break;
-                        case "bRegex_0":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_1":
-                            strTemp = String($('#WOEQLISTFilter').val());
-                            if (strTemp !== 'null')
-                                aoData[i].value = strTemp.split(',').join('|');
-                            else
-                                aoData[i].value = '';
-                            break;
-                        case "bRegex_1":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_3":
-                            strTemp = String($('#STATUSFilter').val());
-                            if (strTemp !== 'null')
-                                aoData[i].value = strTemp.split(',').join('|');
-                            else
-                                aoData[i].value = '';
-                            break;
-                        case "bRegex_3":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_4":
-                            strTemp = String($('#PRIORITYFilter').val());
-                            if (strTemp !== 'null')
-                                aoData[i].value = strTemp.split(',').join('|');
-                            else
-                                aoData[i].value = '';
-                            break;
-                        case "bRegex_4":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_5":
-                            strTemp = String($('#WOTYPEFilter').val());
-                            if (strTemp !== 'null')
-                                aoData[i].value = strTemp.split(',').join('|');
-                            else
-                                aoData[i].value = '';
-                            break;
-                        case "bRegex_5":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_6":
-                            aoData[i].value = $('#ORIGINATORFilter').val();
-                            break;
-                        case "bRegex_6":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_7":
-                            aoData[i].value = $('#REQUESTDATEFromFilter').val() + '~' +
-                                    $('#REQUESTDATEToFilter').val();
-                            break;
-                        case "bRegex_7":
-                            aoData[i].value = true;
-                            break;
-                        case "sSearch_9":
-                            aoData[i].value = $('#CLOSEDATEFromFilter').val() + '~' +
-                                    $('#CLOSEDATEToFilter').val();
-                            break;
-                        case "bRegex_9":
-                            aoData[i].value = true;
-                            break;
-                    }
-                }
+                AppendAdditionalParameters(aoData)
 
                 oSettings.jqXHR = $.ajax({  //This is the setting that does the posting of the data...
                     "dataType": 'json',
@@ -510,4 +428,91 @@ function loadWODescDialog(oObj) {
         autoResize: true,
         title: 'Work Order: ' + oObj.WONUM
     });
+}
+
+function AppendAdditionalParameters(aoData) {
+    var strTemp;
+
+
+    /*I add the FixedColumnHeaders list to the data array that is sent to the server. This is a custom implementation to accomodate the fact that when datatables implements reorderable columns, the sSearch
+    * variables get sent to the server based on the old column position whereas mDataProp gets sent based on the new column position. I am then unable to implement a multicolumn search because the data property and
+    * search property don't align. So I send this FixedColumnHeaders to the server for use in searching based on the corresponding Ssearch variables. This list must match exactly the columns in DataTables table instantiation. 
+    * I had previously implemented this in the server side code, but then any time my UI changed I would need to recompile the web service... So I fixed the implementation...*/
+    aoData.push({
+        "name": "FixedColumnHeaders",
+        "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
+    });
+
+    /*iterates through the array and updates the appropriate object using the below 'case' statements. I was having an issue where sSearch was getting populated twice (ie sSearch_4 & sSearch_7 would contain the same search string) 
+    * I solved the issue by manually setting sSearch in my aoData array below. Note that I populate the corresponding bRegex variable; this value isn't used anywhere but could be for future implementations...*/
+    for (var i = 0; i < aoData.length; i++) {
+        switch (aoData[i].name) {
+            case "sSearch_0":
+                aoData[i].value = $('#WONUMFilter').val();
+                break;
+            case "bRegex_0":
+                aoData[i].value = true;
+                break;
+            case "sSearch_1":
+                strTemp = String($('#WOEQLISTFilter').val());
+                if (strTemp !== 'null')
+                    aoData[i].value = strTemp.split(',').join('|');
+                else
+                    aoData[i].value = '';
+                break;
+            case "bRegex_1":
+                aoData[i].value = true;
+                break;
+            case "sSearch_3":
+                strTemp = String($('#STATUSFilter').val());
+                if (strTemp !== 'null')
+                    aoData[i].value = strTemp.split(',').join('|');
+                else
+                    aoData[i].value = '';
+                break;
+            case "bRegex_3":
+                aoData[i].value = true;
+                break;
+            case "sSearch_4":
+                strTemp = String($('#PRIORITYFilter').val());
+                if (strTemp !== 'null')
+                    aoData[i].value = strTemp.split(',').join('|');
+                else
+                    aoData[i].value = '';
+                break;
+            case "bRegex_4":
+                aoData[i].value = true;
+                break;
+            case "sSearch_5":
+                strTemp = String($('#WOTYPEFilter').val());
+                if (strTemp !== 'null')
+                    aoData[i].value = strTemp.split(',').join('|');
+                else
+                    aoData[i].value = '';
+                break;
+            case "bRegex_5":
+                aoData[i].value = true;
+                break;
+            case "sSearch_6":
+                aoData[i].value = $('#ORIGINATORFilter').val();
+                break;
+            case "bRegex_6":
+                aoData[i].value = true;
+                break;
+            case "sSearch_7":
+                aoData[i].value = $('#REQUESTDATEFromFilter').val() + '~' +
+                        $('#REQUESTDATEToFilter').val();
+                break;
+            case "bRegex_7":
+                aoData[i].value = true;
+                break;
+            case "sSearch_9":
+                aoData[i].value = $('#CLOSEDATEFromFilter').val() + '~' +
+                        $('#CLOSEDATEToFilter').val();
+                break;
+            case "bRegex_9":
+                aoData[i].value = true;
+                break;
+        }
+    }
 }

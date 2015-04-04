@@ -101,15 +101,15 @@ namespace WorkOrderWizard.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetWorkOrders(int MaxRecordCount)
+        public JsonResult GetWorkOrders(int MaxRecordCount, JQueryDataTablesModel jQueryDataTablesModel)
         {
-            int totalRecordCount, searchRecordCount, intMaxRecordCount;
-            JQueryDataTablesModel jQueryDataTablesModel;
+            int totalRecordCount, searchRecordCount;
+            //JQueryDataTablesModel jQueryDataTablesModel;
             var result = new JsonResult();
 
 
             //Populate my jQueryDataTablesModel by using the static method..
-            jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
+            //jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
 
             InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
 
@@ -134,7 +134,7 @@ namespace WorkOrderWizard.Controllers
 
             InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
 
-            var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0,
+            var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
                 totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
 
             RenderWorkOrderReport(objItems);

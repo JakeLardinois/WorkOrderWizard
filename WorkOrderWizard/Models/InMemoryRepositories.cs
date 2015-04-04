@@ -27,6 +27,8 @@ namespace WorkOrderWizard.Models
 
             totalRecordCount = AllWorkOrders.Count;
 
+            var temp = DataTablesModel.iColumns;
+
             objWorkOrderSearch = new WorkOrderSearch();
             for (int intCounter = 0; intCounter < DataTablesModel.iColumns; intCounter++)
             {
