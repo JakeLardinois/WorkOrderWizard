@@ -11,9 +11,9 @@ namespace WorkOrderWizard.Models
 {
     public static class InMemoryWorkOrdersRepository
     {
-        public static IList<WorkOrder> AllWorkOrders { get; set; }
+        public static WorkOrders AllWorkOrders { get; set; }
 
-        public static IList<WorkOrder> GetWorkOrders(int MaxRecordCount, out int totalRecordCount, out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
+        public static IList<WorkOrder> GetWorkOrders(int MaxRecordCount, out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
         {
             //MP2_DataBaseSettings db = new MP2_DataBaseSettings();
 
@@ -25,7 +25,7 @@ namespace WorkOrderWizard.Models
             WorkOrderSearch objWorkOrderSearch;
 
 
-            totalRecordCount = AllWorkOrders.Count;
+            //totalRecordCount = AllWorkOrders.Count;
 
             var temp = DataTablesModel.iColumns;
 
@@ -98,7 +98,7 @@ namespace WorkOrderWizard.Models
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
                     .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.WOTYPE))
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
-                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) ||  c.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp: 0))
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
                     .Where(c => c.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
                     .Where(c => c.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
                     .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.STATUS))
@@ -112,7 +112,7 @@ namespace WorkOrderWizard.Models
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
                     .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.WOTYPE))
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
-                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || c.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
                     .Where(c => c.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
                     .Where(c => c.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
                     .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.STATUS))

@@ -62,8 +62,8 @@ namespace WorkOrderWizard.Models {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO WO
-        ///(WONUM, CLOSEDATE, TASKDESC, WOTYPE, ORIGINATOR, PRIORITY, REQUESTTIME, REQUESTDATE )
-        ///VALUES (&apos;~p0&apos;, &apos;~p1&apos;, &apos;~p2&apos;, &apos;~p3&apos;, &apos;~p4&apos;, ~p5, &apos;~p6&apos;, &apos;~p7&apos;).
+        ///(WONUM, CLOSEDATE, TASKDESC, NOTES, WOTYPE, ORIGINATOR, PRIORITY, REQUESTTIME, REQUESTDATE )
+        ///VALUES (&apos;~p0&apos;, &apos;~p1&apos;, &apos;~p2&apos;, &apos;~p3&apos;, &apos;~p4&apos;, &apos;~p5&apos;, ~p6, &apos;~p7&apos;, &apos;~p8&apos;).
         /// </summary>
         internal static string InsertIntoWO {
             get {
@@ -79,6 +79,27 @@ namespace WorkOrderWizard.Models {
         internal static string InsertIntoWOEQLIST {
             get {
                 return ResourceManager.GetString("InsertIntoWOEQLIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT WO.WONUM, WO.CLOSEDATE, WO.ORIGINATOR, WO.PRIORITY, WO.REQUESTDATE, WO.REQUESTTIME, WO.TASKDESC, WO.NOTES, WO.WOTYPE, WO.STATUS, WOEQLIST.EQNUM, WOEQLIST.LOCATION, WOEQLIST.SUBLOCATION1, WOEQLIST.SUBLOCATION2, WOEQLIST.SUBLOCATION3, WOEQLIST.DEPARTMENT, WOEQLIST.EQDESC, WOEQLIST.WONUM AS WOEQWONUM, WOEQLIST.CLOSEDATE AS WOEQCLOSEDATE
+        ///FROM WO INNER JOIN WOEQLIST
+        ///	ON WO.WONUM = WOEQLIST.WONUM AND WO.CLOSEDATE = WOEQLIST.CLOSEDATE.
+        /// </summary>
+        internal static string SelectAllWOAndEQLIST {
+            get {
+                return ResourceManager.GetString("SelectAllWOAndEQLIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT *
+        ///FROM WOEQLIST.
+        /// </summary>
+        internal static string SelectAllWOEQLIST {
+            get {
+                return ResourceManager.GetString("SelectAllWOEQLIST", resourceCulture);
             }
         }
         
@@ -127,6 +148,40 @@ namespace WorkOrderWizard.Models {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT COUNT(*) AS TotalWorkOrders
+        ///FROM WO.
+        /// </summary>
+        internal static string SelectTotalWOCount {
+            get {
+                return ResourceManager.GetString("SelectTotalWOCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT WO.WONUM, WO.CLOSEDATE, WO.ORIGINATOR, WO.PRIORITY, WO.REQUESTDATE, WO.REQUESTTIME, WO.TASKDESC, WO.NOTES, WO.WOTYPE, WO.STATUS, WOEQLIST.EQNUM, WOEQLIST.LOCATION, WOEQLIST.SUBLOCATION1, WOEQLIST.SUBLOCATION2, WOEQLIST.SUBLOCATION3, WOEQLIST.DEPARTMENT, WOEQLIST.EQDESC, WOEQLIST.WONUM AS WOEQWONUM, WOEQLIST.CLOSEDATE AS WOEQCLOSEDATE
+        ///FROM WO INNER JOIN WOEQLIST
+        ///	ON WO.WONUM = WOEQLIST.WONUM AND WO.CLOSEDATE = WOEQLIST.CLOSEDATE
+        ///WHERE WO.STATUS IN (~p0).
+        /// </summary>
+        internal static string SelectWOAndEQLISTByStatusList {
+            get {
+                return ResourceManager.GetString("SelectWOAndEQLISTByStatusList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT WO.WONUM, WO.CLOSEDATE, WO.ORIGINATOR, WO.PRIORITY, WO.REQUESTDATE, WO.REQUESTTIME, WO.TASKDESC, WO.NOTES, WO.WOTYPE, WO.STATUS, WOEQLIST.EQNUM, WOEQLIST.LOCATION, WOEQLIST.SUBLOCATION1, WOEQLIST.SUBLOCATION2, WOEQLIST.SUBLOCATION3, WOEQLIST.DEPARTMENT, WOEQLIST.EQDESC, WOEQLIST.WONUM AS WOEQWONUM, WOEQLIST.CLOSEDATE AS WOEQCLOSEDATE
+        ///FROM WO INNER JOIN WOEQLIST
+        ///	ON WO.WONUM = WOEQLIST.WONUM AND WO.CLOSEDATE = WOEQLIST.CLOSEDATE
+        ///WHERE WO.WONUM = &apos;~p0&apos; AND WO.CLOSEDATE = #~p1#.
+        /// </summary>
+        internal static string SelectWOAndEQLISTByWONumAndCloseDate {
+            get {
+                return ResourceManager.GetString("SelectWOAndEQLISTByWONumAndCloseDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT *
         ///FROM WOEQLIST
         ///WHERE WONUM IN (~p0).
@@ -144,6 +199,17 @@ namespace WorkOrderWizard.Models {
         internal static string SelectWOTypes {
             get {
                 return ResourceManager.GetString("SelectWOTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE WO
+        ///SET NOTES = &apos;~p0&apos;
+        ///WHERE WONUM = &apos;~p1&apos; AND CLOSEDATE = #~p2#.
+        /// </summary>
+        internal static string UpdateWONotes {
+            get {
+                return ResourceManager.GetString("UpdateWONotes", resourceCulture);
             }
         }
     }

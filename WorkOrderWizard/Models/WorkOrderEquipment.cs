@@ -34,7 +34,7 @@ namespace WorkOrderWizard.Models
             try
             {
                 objDb = new MP2_DataBaseSettings();
-                var strSQL = QueryDefinitions.GetQuery("InsertIntoWOEQLIST", new string[] { WONUM, CLOSEDATE.ToString("d"), EQNUM,
+                var strSQL = QueryDefinitions.GetQuery("InsertIntoWOEQLIST", new string[] { WONUM, string.Format("{0:d}", CLOSEDATE), EQNUM,
                 LOCATION, SUBLOCATION1, SUBLOCATION2, SUBLOCATION3, DEPARTMENT, EQDESC.EscapeSingleQuotes()});
                 OleDbCommand objOleDbCommand = new OleDbCommand(strSQL, objDb.OleDBConnection);
 

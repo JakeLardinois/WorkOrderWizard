@@ -21,6 +21,7 @@
                       '<br><select title="Select Priority" id="WOPriority" multiple="false" required needsSelection></select>' +
                       '<br><select title="Select Type" id="WOTypes" multiple="false" required needsSelection></select>' +
                       '<br><input title="Enter Employee #..." id="EmployeeNo" type="text" placeholder="Enter Employee #..." required><label id="EmployeeName"></label><input id="EmployeeInfo" type="hidden">' +
+                      '<br><input title="Enter Title..." id="TaskDesc" type="text" maxlength="72" placeholder="Enter Title..." required>' +
                       '<br><textarea title="Enter Work Order Notes..." id="WONotes" placeholder="Enter Work Order Notes..." required></textarea>' +
                       '</form>',
                   buttons: { Next: 1, Cancel: -1 },
@@ -66,8 +67,9 @@
                                   WOType: $('#WOTypes').val(),
                                   WOEquipment: $('#WOEquipment').val(),
                                   EmployeeInfo: $('#EmployeeInfo').val(),
-                                  TASKDESC: $('#WONotes').val(),
-                                  WOPriority: $('#WOPriority').val()
+                                  TaskDesc: $('#TaskDesc').val(),
+                                  WOPriority: $('#WOPriority').val(),
+                                  WONotes: $('#WONotes').val()
                               }
 
                               $.post(sCreateWOURL, JSON.stringify(objData), function (data) {

@@ -101,6 +101,9 @@ form.WorkOrderWizard label {
 
 
 
+#TaskDesc {
+    width: 300px;
+}
 #WONotes {
     width: 300px;
 }

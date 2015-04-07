@@ -62,5 +62,19 @@ namespace WorkOrderWizard.Models
 
             return items.ThenByDescending(keySelector);
         }
+
+        //my extension method that converts the JSON time format of /Date(1376625062603)/ to a DateTime object
+        public static DateTime GetDateTimeFromJSON(this string source)
+        {
+            double dblTemp;
+
+            return TimeZoneInfo.ConvertTimeFromUtc(
+                new DateTime(1970, 1, 1)
+                .AddMilliseconds(
+                double.TryParse(
+                source.Replace("/Date(", "").Replace(")/", ""),
+                out dblTemp) ? dblTemp : 0),
+                TimeZoneInfo.Local);
+        }
     }
 }

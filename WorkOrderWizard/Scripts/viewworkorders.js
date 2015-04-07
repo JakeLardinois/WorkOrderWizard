@@ -52,7 +52,7 @@ $(document).ready(function () {
     $("#CLOSEDATEFromFilter").datepicker();
     $("#CLOSEDATEToFilter").datepicker();
 
-    $("#STATUSFilter").append("<option value=\"O\">Open</option>");
+    $("#STATUSFilter").append("<option selected=\"selected\" value=\"O\">Open</option>");
     $("#STATUSFilter").append("<option value=\"R\">Ready</option>");
     $("#STATUSFilter").append("<option value=\"H\">Hold</option>");
     $("#STATUSFilter").append("<option value=\"C\">Completed</option>");
@@ -122,6 +122,44 @@ $(document).ready(function () {
                 blnCheckChanged = false;
                 oTable.draw();
             }
+        }
+    });
+
+    $.editable.addInputType('autogrow', {   //adds the autogrow plugin for editing notes
+        element: function (settings, original) {
+            var textarea = $('<textarea />');
+            if (settings.rows) {
+                textarea.attr('rows', settings.rows);
+            } else {
+                textarea.height(settings.height + 50);
+            }
+            textarea.attr('id', settings.id);
+
+            $(this).append(textarea);
+            $(this).append('<br >'); //This is how you get the buttons to be below the textarea box...
+            //$(this).append($('<input type="submit" value="Process Me!" >').button()); //this works as well...
+            $(this).append($('<button type="submit">Save</button>').button());
+
+            /*I had an issue when I manually added my below cancel button because a default jquery button has a type of submit and i believe that this was overriding the type I specified of cancel
+             * so every time I hit my cancel button the jeditable form would get submitted. I could have set onblur=cancel and then set my cancel button below to type=whatever (leaving it as 
+             * type=cancel still caused a submit) but I wanted the user to be able to click outside of the textbox when editing and so I had to leave onblur=ignore. The only way that I found to be
+             * able to make jeditable call the cancel event was to copy the below code from line 440 in jquery.jeditable.js and change reset.apply(form, [settings, original]); 
+             * to reset.apply(this, [settings, original]); and call it on the click event of my custom jquery button in the code below.*/
+            $(this).append(
+                $('<button type="cancel">Cancel</button>').button()
+                .click(function (event) {
+                    if ($.isFunction($.editable.types[settings.type].reset)) {
+                        var reset = $.editable.types[settings.type].reset;
+                    } else {
+                        var reset = $.editable.types['defaults'].reset;
+                    }
+                    reset.apply(this, [settings, original]);
+                    return false;
+                }));
+            return (textarea);
+        },
+        plugin: function (settings, original) {
+            $('textarea', this).autogrow(settings.autogrow);
         }
     });
 
@@ -316,7 +354,6 @@ $(document).ready(function () {
         i = $.inArray(nTr, anOpen);
 
         rowIndex = oTable.row(nTr).index(); //get the index of the current row
-
         oObj = oTable.row(rowIndex).data(); //get the WorkOrder object
 
         sHTML =
@@ -324,8 +361,14 @@ $(document).ready(function () {
             '<tbody>' +
                 '<tr>' +
                     '<td>' +
-                        '<div>' +
-                            oObj.TASKDESC +
+                        '<label for="TASKDESC"><b>Description: </b></label>' +
+                        '<label id="TASKDESC">' + oObj.TASKDESC + '</label>' +
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div id="WONoteEditorDiv" class="EditWONotes">' +
+                            oObj.HTMLWONotes +
                         '</div>' +
                     '</td>' +
                 '</tr>' +
@@ -334,14 +377,42 @@ $(document).ready(function () {
 
         $("#DescriptionDialogDiv").html(sHTML);
 
+        $('.EditWONotes').editable(sWONotesUpdateUrl, { //make the note detail editable...
+            id: 'WONotes',  //gives the label 'id' the label 'PostedNoteData'
+            name: 'NoteContent', //labels the updated data as NoteContent instead of 'value'
+            submitdata: { WONUM: oObj.WONUM, CLOSEDATE: oObj.CLOSEDATE, WONotes: oObj.WONotes },
+            type: "autogrow", //specifies to use the autogrow input specified above
+            //submit: 'OK', //Adds the OK button that submits post UPDATE-I no longer need these since I manually create the buttons in my above "autogrow" creation...
+            //cancel: 'Cancel', //adds the Cancel button that cancels the edit
+            tooltip: "Click to edit Notes...",
+            onblur: "ignore", //what happens when user clicks out of textarea values can be "ignore", "submit", or "cancel"
+            indicator: '<img src="' + sProgressImageUrl + '">', //This is what shows while ajax is processing. Could also just be a text message like 'Saving...'
+            data: function (value, settings) { //This gets fired when the control goes into edit mode
+                /* Convert <br> to newline. */
+                var retval = value.replace(/<br[\s\/]?>/gi, '\n');
+                return retval;
+            },
+            callback: function (value, settings) {//This is fired after the control uses ajax to save the data to the server and the JSON Result is recieved back from the server
+                sValue = JSON.parse(value); //puts the JSON data into objects form so they can be accessed like sValue.LastUpdate, etc.
+
+                if (sValue.Success) { oTable.draw(); }
+                else {
+                    alert('The edits failed to save');
+                }
+                $('#WONoteEditorDiv').html(sValue.HTMLWONotes); //Sets the NoteEditorDiv to the html of the newly saved Notes Object's HTML property
+                //window.location.reload();
+
+            }
+        });
+
         // Open this Datatable as a modal dialog box.
         $('#DescriptionDialogDiv').dialog({
             modal: false,
             resizable: true,
             position: 'center',
-            //width: 'auto', //By not setting the width here, the width stays at whatever the user sets whenever they click on a new address.
+            width: 'auto', //By not setting the width here, the width stays at whatever the user sets whenever they click on a new address.
             autoResize: true,
-            title: 'Work Order: ' + oObj.WONUM
+            title: 'Work Order ' + oObj.WONUM
         });
 
     });
@@ -396,38 +467,6 @@ function FormatWOEquipmentSelectColumnJSON(x) {
     }
 
     return finalEdit;
-}
-
-function loadWODescDialog(oObj) {
-    var strAddr;
-    var sHTML;
-    var dataValues;
-
-
-    sHTML =
-        '<table>' +
-            '<tbody>' +
-                '<tr>' +
-                    '<td>' +
-                        '<div>' +
-                            oObj.TASKDESC +
-                        '</div>' +
-                    '</td>' +
-                '</tr>' +
-            '</tbody>' +
-        '</table>';
-
-    $("#DescriptionDialogDiv").html(sHTML);
-
-    // Open this Datatable as a modal dialog box.
-    $('#DescriptionDialogDiv').dialog({
-        modal: false,
-        resizable: true,
-        position: 'center',
-        //width: 'auto', //By not setting the width here, the width stays at whatever the user sets whenever they click on a new address.
-        autoResize: true,
-        title: 'Work Order: ' + oObj.WONUM
-    });
 }
 
 function AppendAdditionalParameters(aoData) {
@@ -512,6 +551,13 @@ function AppendAdditionalParameters(aoData) {
                 break;
             case "bRegex_9":
                 aoData[i].value = true;
+                break;
+            case "sSearch": //I set the sSearch variable so that I can easily grab the value from the controller to filter my initial WO list....
+                strTemp = String($('#STATUSFilter').val());
+                if (strTemp !== 'null')
+                    aoData[i].value = strTemp;
+                else
+                    aoData[i].value = 'O'; //by default send the status of O if no status is specified
                 break;
         }
     }

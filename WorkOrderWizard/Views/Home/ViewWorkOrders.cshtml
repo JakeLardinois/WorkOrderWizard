@@ -85,11 +85,14 @@
     <script type="text/javascript">
         var sOpenImageUrl = '@Url.Content("~/Content/images/details_open.png")';
         var sCloseImageUrl = '@Url.Content("~/Content/images/details_close.png")';
+        var sProgressImageUrl = '@Url.Content("~/Content/images/Progress.gif")';
         var sImagesURL = '@Url.Content("~/Content/images/")';
         var sGetWorkOrdersUrl = '@Url.Action("GetWorkOrders", "MP2")';
         var sWOTypesURL = '@Url.Action("WorkOrderTypes", "MP2")';
         var sWOEquipmentListURL = '@Url.Action("EquipmentList", "MP2")';
         var sPrintWorkOrdersUrl = '@Url.Action("GenerateWOReport", "MP2")';
+        var sWONotesUpdateUrl = '@Url.Action("UpdateWONote", "MP2")';
+        
 
         function GetEquipTableHTML(oTable, nTr, sTableName) {
             var oData = oTable.row(nTr).data();
@@ -124,6 +127,8 @@
         }
     </script>
     <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/datatables")">
+    </script>
+    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/jeditable")">
     </script>
     <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/viewworkorders")">
     </script>

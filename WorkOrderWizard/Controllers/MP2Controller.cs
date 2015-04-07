@@ -15,7 +15,16 @@ namespace WorkOrderWizard.Controllers
 {
     public class MP2Controller : Controller
     {
+        //private WorkOrders mWorkOrders
+        //{
+        //    get { return Session["mWorkOrders"] as WorkOrders; }
+        //    set { Session["mWorkOrders"] = value; }
+        //}
 
+        //protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        //{
+        //    base.Initialize(requestContext);
+        //}
 
         [HttpGet]
         public JsonResult WorkOrderTypes()
@@ -51,7 +60,8 @@ namespace WorkOrderWizard.Controllers
         {
             var db = new SytelineDbEntities();
 
-            var objSLEmployee = db.Database.SqlQuery<Employee>(QueryDefinitions.GetQuery("SelectSLEmployeeByID", new string[] { EmployeeID.PadLeft(7) }))
+            var strSQL = QueryDefinitions.GetQuery("SelectSLEmployeeByID", new string[] { EmployeeID.PadLeft(7) });
+            var objSLEmployee = db.Database.SqlQuery<Employee>(strSQL)
                 .DefaultIfEmpty(new Employee { EmployeeFound = false })
                 .FirstOrDefault();
 
@@ -107,18 +117,20 @@ namespace WorkOrderWizard.Controllers
             //JQueryDataTablesModel jQueryDataTablesModel;
             var result = new JsonResult();
 
-
+            
             //Populate my jQueryDataTablesModel by using the static method..
             //jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
 
-            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
+            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
+            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
+            
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(MaxRecordCount,
-                totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
+                searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
 
             result.Data = new
             {
-                iTotalRecords = totalRecordCount,
+                iTotalRecords = InMemoryWorkOrdersRepository.AllWorkOrders.TotalRecordCount,
                 jQueryDataTablesModel.sEcho,
                 iTotalDisplayRecords = searchRecordCount,
                 aaData = objItems
@@ -132,10 +144,10 @@ namespace WorkOrderWizard.Controllers
         {
             int totalRecordCount, searchRecordCount;
 
-            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
+            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
-                totalRecordCount: out totalRecordCount, searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
+                searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
 
             RenderWorkOrderReport(objItems);
             return View();  //note that this is never reached since RenderWorkOrderReport writes to the response stream
@@ -191,6 +203,23 @@ namespace WorkOrderWizard.Controllers
             Response.AddHeader("content-disposition", "attachment; filename=WorkOrders" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "." + fileNameExtension);
             Response.BinaryWrite(renderedBytes);
             Response.End();
+        }
+
+        [HttpPost]
+        public JsonResult UpdateWONote(string WONUM, string CloseDate, string NoteContent)
+        {
+            WorkOrder objWorkOrder;
+            bool blnResult;
+
+            var CLOSEDATE = CloseDate.GetDateTimeFromJSON();
+
+            objWorkOrder = new WorkOrder() { WONUM = WONUM, CLOSEDATE = CLOSEDATE, WONotes = NoteContent };
+            blnResult = objWorkOrder.UpdateWONote();
+
+            objWorkOrder = new WorkOrder(WONUM, CLOSEDATE);
+
+            return Json(new { Success = blnResult, objWorkOrder.HTMLWONotes });
+            //return new JsonResult();
         }
     }
 }
