@@ -9,6 +9,8 @@ using System.Text;
 using System.Data;
 
 
+
+
 namespace WorkOrderWizard.Models
 {
     public class WorkOrder
@@ -253,8 +255,31 @@ namespace WorkOrderWizard.Models
     public class WorkOrders : List<WorkOrder>
     {
         private StringBuilder objStrBldrSQL = new StringBuilder();
-        public int TotalRecordCount { get; set; }
+        public static int TotalRecordCount
+        {
+            get
+            {
+                MP2_DataBaseSettings db = new MP2_DataBaseSettings();
+                OleDbCommand objOleDbCommand;
+                OleDbDataReader objOleDbDataReader;
+                int intTemp;
+                
 
+                using (db.OleDBConnection)
+                {
+                    var strSQL = QueryDefinitions.GetQuery("SelectTotalWOCount");
+
+                    objOleDbCommand = new OleDbCommand(strSQL, db.OleDBConnection);
+                    db.OleDBConnection.Open();
+                    objOleDbDataReader = objOleDbCommand.ExecuteReader();
+                    objOleDbDataReader.Read();
+                    db.OleDBConnection.Close();
+                    intTemp = int.TryParse(objOleDbDataReader["TotalWorkOrders"].ToString(), out intTemp) ? intTemp : 0;
+                }
+
+                return intTemp;
+            }
+        }
 
         public WorkOrders(string strWOStatuses)
             : base()
@@ -314,16 +339,6 @@ namespace WorkOrderWizard.Models
                         .ToList();
                 }
 
-                objStrBldrSQL.Clear();
-                objStrBldrSQL.Append(QueryDefinitions.GetQuery("SelectTotalWOCount"));
-                objOleDbCommand = new OleDbCommand(objStrBldrSQL.ToString(), db.OleDBConnection);
-                db.OleDBConnection.Open();
-                objOleDbDataReader = objOleDbCommand.ExecuteReader();
-
-                objOleDbDataReader.Read();
-                TotalRecordCount = int.TryParse(objOleDbDataReader["TotalWorkOrders"].ToString(), out intTemp) ? intTemp : 0;
-
-                db.OleDBConnection.Close();
             }
 
         }

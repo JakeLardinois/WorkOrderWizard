@@ -10,6 +10,9 @@ using System.IO;
 using System.Text;
 using Microsoft.Reporting.WebForms;
 
+using LinqToDB.Data;
+
+
 
 namespace WorkOrderWizard.Controllers
 {
@@ -122,15 +125,22 @@ namespace WorkOrderWizard.Controllers
             //jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
 
             //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
-            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
-            
+            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
+
+            var strTemp = MP2_DataBaseSettings.ConnectionString;
+
+            using (var db = new mp250dbDB())
+            {
+                var list = db.WOes.ToList();
+                var str = string.Empty;
+            }
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(MaxRecordCount,
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
 
             result.Data = new
             {
-                iTotalRecords = InMemoryWorkOrdersRepository.AllWorkOrders.TotalRecordCount,
+                iTotalRecords = WorkOrders.TotalRecordCount, // iTotalRecords = InMemoryWorkOrdersRepository.AllWorkOrders.TotalRecordCount,
                 jQueryDataTablesModel.sEcho,
                 iTotalDisplayRecords = searchRecordCount,
                 aaData = objItems
@@ -144,7 +154,7 @@ namespace WorkOrderWizard.Controllers
         {
             int totalRecordCount, searchRecordCount;
 
-            InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
+            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
