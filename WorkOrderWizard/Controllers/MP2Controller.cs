@@ -134,7 +134,6 @@ namespace WorkOrderWizard.Controllers
         {
             int totalRecordCount, searchRecordCount;
 
-            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
@@ -200,6 +199,7 @@ namespace WorkOrderWizard.Controllers
             WO objWorkOrder;
             bool blnResult;
 
+
             var CLOSEDATE = CloseDate.GetDateTimeFromJSON();
 
             objWorkOrder = new WO() { WONUM = WONUM, CLOSEDATE = CLOSEDATE, NOTES = NoteContent };
@@ -208,7 +208,6 @@ namespace WorkOrderWizard.Controllers
             objWorkOrder = new WO(WONUM, CLOSEDATE);
 
             return Json(new { Success = blnResult, objWorkOrder.HTMLWONotes });
-            //return new JsonResult();
         }
     }
 }

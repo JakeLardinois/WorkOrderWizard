@@ -37,7 +37,7 @@
               },
               state1: {
                   title: 'Work Order Wizard - Step 2',
-                  html: '<p class="message success">Chose up to 5 pieces of Equipment.</p>' +
+                  html: '<p class="message success">Chose up to 15 pieces of Equipment.</p>' +
                       '<form class="WorkOrderWizard" id="WorkOrderWizardStep2"><div class="error"></div>' +
                       '<select title="Select at least 1 piece of equipment..." id="WOEquipment" multiple="true" required needsSelection></select>' +
                       '</form>',
@@ -159,11 +159,11 @@
                   //$(".ui-multiselect-none").hide();
               },
               click: function (e) {
-                  if ($(this).multiselect("widget").find("input:checked").length > 5) {
-                      warning.addClass("error").removeClass("success").html("You can only chose a MAX of 5 pieces of Equipment!");
+                  if ($(this).multiselect("widget").find("input:checked").length > 15) {
+                      warning.addClass("error").removeClass("success").html("You can only chose a MAX of 15 pieces of Equipment!");
                       return false;
                   } else {
-                      warning.addClass("success").removeClass("error").html("Chose up to 5 pieces of Equipment.");
+                      warning.addClass("success").removeClass("error").html("Chose up to 15 pieces of Equipment.");
                   }
               }
           }).multiselectfilter();

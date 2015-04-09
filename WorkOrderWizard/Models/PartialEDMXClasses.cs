@@ -9,7 +9,7 @@ using System.Data;
 
 namespace WorkOrderWizard.Models
 {
-    public partial class WO
+    public partial class WO : IEquatable<WO>
     {
         private StringBuilder objStrBldrSQL = new StringBuilder();
         private List<WOEQLIST> mWOEQLIST { get; set; }
@@ -277,6 +277,37 @@ namespace WorkOrderWizard.Models
 
             return intRecordsAffected == 0 ? false : true;
         }
+
+        #region IEquatableMethods
+        public bool Equals(WO other)
+        {
+
+            //Check whether the compared object is null.
+            if (Object.ReferenceEquals(other, null)) return false;
+
+            //Check whether the compared object references the same data.
+            if (Object.ReferenceEquals(this, other)) return true;
+
+            //Check whether the products' properties are equal.
+            return WONUM.Equals(other.WONUM) && CLOSEDATE.Equals(other.CLOSEDATE);
+        }
+
+        // If Equals() returns true for a pair of objects 
+        // then GetHashCode() must return the same value for these objects.
+
+        public override int GetHashCode()
+        {
+
+            //Get hash code for the Name field if it is not null.
+            int hashWONUM = WONUM == null ? 0 : WONUM.GetHashCode();
+
+            //Get hash code for the Code field.
+            int hashCLOSEDATE = CLOSEDATE.GetHashCode();
+
+            //Calculate the hash code for the product.
+            return hashWONUM ^ hashCLOSEDATE;
+        }
+        #endregion
     }
 
     public partial class WOes
@@ -338,8 +369,8 @@ namespace WorkOrderWizard.Models
     {
         public string DescriptionDisplay { 
             get { 
-                return EQNUM + " " + DESCRIPTION; 
-            } 
+                return EQNUM + ": " + DESCRIPTION; 
+            }
         }
     }
 }
