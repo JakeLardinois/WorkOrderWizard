@@ -42,15 +42,16 @@ namespace WorkOrderWizard
             bundles.Add(new ScriptBundle("~/bundles/datetimeformatter").Include(
                         "~/Scripts/DateTimeFormatter.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/createworkorders").Include(
-                        "~/Scripts/createworkorders.js"));
             bundles.Add(new ScriptBundle("~/bundles/index").Include(
                         "~/Scripts/index.js"));
+            bundles.Add(new ScriptBundle("~/bundles/createworkorders").Include(
+                        "~/Scripts/createworkorders.js"));
             bundles.Add(new ScriptBundle("~/bundles/viewworkorders").Include(
                         "~/Scripts/viewworkorders.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jeditable").Include(
                         "~/Scripts/JEditable-1.7.3/jquery.jeditable.js"));
+
 
 
             bundles.Add(new StyleBundle("~/Content/impromptu").Include(
@@ -69,6 +70,7 @@ namespace WorkOrderWizard
                 "~/Scripts/DataTables-1.10.2/media/css/jquery.dataTables_themeroller.css",
                 "~/Scripts/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css",
                 "~/Scripts/DataTables-1.10.2/extensions/ColReorder/css/dataTables.colReorder.css"));
+
         }
     }
 }

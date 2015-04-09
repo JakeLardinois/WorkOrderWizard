@@ -1,4 +1,5 @@
-﻿@{
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
     Layout = null;
 }
 
@@ -13,5 +14,32 @@
         <h1>Error.</h1>
         <h2>An error occurred while processing your request.</h2>
     </hgroup>
+
+    <div class="list-header clearfix">
+        <span>Error</span>
+    </div>
+    <div class="list-sfs-holder">
+        <div class="alert alert-error">
+            An unexpected error has occurred. Please contact the system administrator.
+        </div>
+        @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div>
+                <p>
+                    <b>Exception:</b> @Model.Exception.Message<br />
+                    <b>Controller:</b> @Model.ControllerName<br />
+                    <b>Action:</b> @Model.ActionName
+                </p>
+                <p>
+                    <b>Source:</b> @Model.Exception.Source<br />
+                </p>
+                <div style="overflow:scroll">
+                    <pre>
+                        @Model.Exception.StackTrace
+                    </pre>
+                </div>
+            </div>
+        }
+    </div>
 </body>
 </html>

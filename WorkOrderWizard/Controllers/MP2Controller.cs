@@ -10,34 +10,22 @@ using System.IO;
 using System.Text;
 using Microsoft.Reporting.WebForms;
 
-using LinqToDB.Data;
-
-
 
 namespace WorkOrderWizard.Controllers
 {
     public class MP2Controller : Controller
     {
-        //private WorkOrders mWorkOrders
-        //{
-        //    get { return Session["mWorkOrders"] as WorkOrders; }
-        //    set { Session["mWorkOrders"] = value; }
-        //}
-
-        //protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        //{
-        //    base.Initialize(requestContext);
-        //}
 
         [HttpGet]
         public JsonResult WorkOrderTypes()
         {
-            //JavaScriptSerializer serializer;
-            var objWOTypeList = new WorkOrderTypes();
+            List<WOTYPE> objWOTypeList;
 
 
-            //return JsonConvert.SerializeObject(WOTypeList);
-
+            using (var db = new mp250dbDB())
+            {
+                objWOTypeList = db.WOTYPEs.ToList();
+            }
 
             var result = new JsonResult();
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
@@ -49,9 +37,17 @@ namespace WorkOrderWizard.Controllers
         [HttpGet]
         public JsonResult EquipmentList()
         {
-            var objEquipmentList = new EquipmentList();
-            var result = new JsonResult();
+            List<EQUIP> objEquipmentList;
 
+
+            using (var db = new mp250dbDB())
+            {
+                objEquipmentList = db.EQUIPs
+                    .Where(e => e.INSERVICE.Equals("Y"))
+                    .ToList();
+            }
+
+            var result = new JsonResult();
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             result.Data = objEquipmentList;
 
@@ -77,16 +73,15 @@ namespace WorkOrderWizard.Controllers
         [HttpPost]
         public JsonResult CreateWorkOrder()
         {
-            WorkOrder objWorkOrder;
+            WO objWorkOrder;
             var result = new JsonResult();
             var objPostedData = Request.InputStream;
             var strPostedData = new StreamReader(objPostedData).ReadToEnd();
 
 
-            objWorkOrder = new WorkOrder();
             try
             {
-                objWorkOrder = JsonConvert.DeserializeObject<WorkOrder>(strPostedData);
+                objWorkOrder = JsonConvert.DeserializeObject<WO>(strPostedData);
                 objWorkOrder.WONUM = objWorkOrder.GetNextWorkOrderNum(); //The work order number must be set before populating from post data,  
                 objWorkOrder.PopulateFromPostVariables();                //else the WONUM won't beavailable when adding the equipment to the WO from the post stream
             }
@@ -117,30 +112,15 @@ namespace WorkOrderWizard.Controllers
         public JsonResult GetWorkOrders(int MaxRecordCount, JQueryDataTablesModel jQueryDataTablesModel)
         {
             int totalRecordCount, searchRecordCount;
-            //JQueryDataTablesModel jQueryDataTablesModel;
             var result = new JsonResult();
 
-            
-            //Populate my jQueryDataTablesModel by using the static method..
-            //jQueryDataTablesModel = JQueryDataTablesModel.CreateFromPostData(Request.InputStream);
-
-            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders();
-            //InMemoryWorkOrdersRepository.AllWorkOrders = new WorkOrders(jQueryDataTablesModel.sSearch);
-
-            var strTemp = MP2_DataBaseSettings.ConnectionString;
-
-            using (var db = new mp250dbDB())
-            {
-                var list = db.WOes.ToList();
-                var str = string.Empty;
-            }
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(MaxRecordCount,
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
 
             result.Data = new
             {
-                iTotalRecords = WorkOrders.TotalRecordCount, // iTotalRecords = InMemoryWorkOrdersRepository.AllWorkOrders.TotalRecordCount,
+                iTotalRecords = WOes.TotalRecordCount, // iTotalRecords = InMemoryWorkOrdersRepository.AllWorkOrders.TotalRecordCount,
                 jQueryDataTablesModel.sEcho,
                 iTotalDisplayRecords = searchRecordCount,
                 aaData = objItems
@@ -163,7 +143,7 @@ namespace WorkOrderWizard.Controllers
             return View();  //note that this is never reached since RenderWorkOrderReport writes to the response stream
         }
 
-        private void RenderWorkOrderReport(IList<WorkOrder> objItems)
+        private void RenderWorkOrderReport(IList<WO> objItems)
         {
             string strReportType = "Excel";
             LocalReport objLocalReport;
@@ -174,7 +154,6 @@ namespace WorkOrderWizard.Controllers
             string deviceInfo = "";
             Warning[] warnings;
             string[] streams;
-
 
             objLocalReport = new LocalReport { ReportPath = Server.MapPath(Settings.ReportDirectory + "WorkOrders.rdlc") };
 
@@ -218,15 +197,15 @@ namespace WorkOrderWizard.Controllers
         [HttpPost]
         public JsonResult UpdateWONote(string WONUM, string CloseDate, string NoteContent)
         {
-            WorkOrder objWorkOrder;
+            WO objWorkOrder;
             bool blnResult;
 
             var CLOSEDATE = CloseDate.GetDateTimeFromJSON();
 
-            objWorkOrder = new WorkOrder() { WONUM = WONUM, CLOSEDATE = CLOSEDATE, WONotes = NoteContent };
+            objWorkOrder = new WO() { WONUM = WONUM, CLOSEDATE = CLOSEDATE, NOTES = NoteContent };
             blnResult = objWorkOrder.UpdateWONote();
 
-            objWorkOrder = new WorkOrder(WONUM, CLOSEDATE);
+            objWorkOrder = new WO(WONUM, CLOSEDATE);
 
             return Json(new { Success = blnResult, objWorkOrder.HTMLWONotes });
             //return new JsonResult();

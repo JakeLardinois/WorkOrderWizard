@@ -2240,35 +2240,35 @@ namespace WorkOrderWizard.Models
 	[Table("WOEQLIST")]
 	public partial class WOEQLIST
 	{
-		[PrimaryKey(1), Nullable] public string    WONUM         { get; set; } // text(10)
-		[PrimaryKey(2), Nullable] public DateTime? CLOSEDATE     { get; set; } // DateTime
-		[PrimaryKey(3), Nullable] public string    EQNUM         { get; set; } // text(30)
-		[PrimaryKey(4), Nullable] public string    LOCATION      { get; set; } // text(30)
-		[PrimaryKey(5), Nullable] public string    SUBLOCATION1  { get; set; } // text(30)
-		[PrimaryKey(6), Nullable] public string    SUBLOCATION2  { get; set; } // text(30)
-		[PrimaryKey(7), Nullable] public string    SUBLOCATION3  { get; set; } // text(30)
-		[Column,        Nullable] public string    SERIALNUM     { get; set; } // text(30)
-		[Column,        Nullable] public string    DEPARTMENT    { get; set; } // text(10)
-		[Column,        Nullable] public string    COSTCENTER    { get; set; } // text(15)
-		[Column,        Nullable] public string    GENLEDGERNUM  { get; set; } // text(20)
-		[Column,        Nullable] public double?   DOWNTIME      { get; set; } // Double
-		[Column,        Nullable] public char?     MUSTBEDOWN    { get; set; } // text(1)
-		[Column,        Nullable] public double?   ESTDOWNTIME   { get; set; } // Double
-		[Column,        Nullable] public char?     UNDERWARRANTY { get; set; } // text(1)
-		[Column,        Nullable] public double?   PRIORITY      { get; set; } // Double
-		[Column,        Nullable] public string    UD1           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD2           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD3           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD4           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD5           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD6           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD7           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD8           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD9           { get; set; } // text(20)
-		[Column,        Nullable] public string    UD10          { get; set; } // text(20)
-		[Column,        Nullable] public string    EQDESC        { get; set; } // text(40)
-		[Column,        Nullable] public string    RFOCODE       { get; set; } // text(8)
-		[Column,        Nullable] public string    SOLUTION      { get; set; } // text(8)
+		[PrimaryKey(1), Nullable] public string   WONUM         { get; set; } // text(10)
+		[PrimaryKey(2), Identity] public DateTime CLOSEDATE     { get; set; } // DateTime
+		[PrimaryKey(3), Nullable] public string   EQNUM         { get; set; } // text(30)
+		[PrimaryKey(4), Nullable] public string   LOCATION      { get; set; } // text(30)
+		[PrimaryKey(5), Nullable] public string   SUBLOCATION1  { get; set; } // text(30)
+		[PrimaryKey(6), Nullable] public string   SUBLOCATION2  { get; set; } // text(30)
+		[PrimaryKey(7), Nullable] public string   SUBLOCATION3  { get; set; } // text(30)
+		[Column,        Nullable] public string   SERIALNUM     { get; set; } // text(30)
+		[Column,        Nullable] public string   DEPARTMENT    { get; set; } // text(10)
+		[Column,        Nullable] public string   COSTCENTER    { get; set; } // text(15)
+		[Column,        Nullable] public string   GENLEDGERNUM  { get; set; } // text(20)
+		[Column,        Nullable] public double?  DOWNTIME      { get; set; } // Double
+		[Column,        Nullable] public char?    MUSTBEDOWN    { get; set; } // text(1)
+		[Column,        Nullable] public double?  ESTDOWNTIME   { get; set; } // Double
+		[Column,        Nullable] public char?    UNDERWARRANTY { get; set; } // text(1)
+		[Column,        Nullable] public double?  PRIORITY      { get; set; } // Double
+		[Column,        Nullable] public string   UD1           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD2           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD3           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD4           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD5           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD6           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD7           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD8           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD9           { get; set; } // text(20)
+		[Column,        Nullable] public string   UD10          { get; set; } // text(20)
+		[Column,        Nullable] public string   EQDESC        { get; set; } // text(40)
+		[Column,        Nullable] public string   RFOCODE       { get; set; } // text(8)
+		[Column,        Nullable] public string   SOLUTION      { get; set; } // text(8)
 	}
 
 	[Table("WOGEN")]
@@ -3592,7 +3592,7 @@ namespace WorkOrderWizard.Models
 				t.WODATE       == WODATE);
 		}
 
-		public static WOEQLIST Find(this ITable<WOEQLIST> table, string WONUM, DateTime? CLOSEDATE, string EQNUM, string LOCATION, string SUBLOCATION1, string SUBLOCATION2, string SUBLOCATION3)
+		public static WOEQLIST Find(this ITable<WOEQLIST> table, string WONUM, DateTime CLOSEDATE, string EQNUM, string LOCATION, string SUBLOCATION1, string SUBLOCATION2, string SUBLOCATION3)
 		{
 			return table.FirstOrDefault(t =>
 				t.WONUM        == WONUM        &&

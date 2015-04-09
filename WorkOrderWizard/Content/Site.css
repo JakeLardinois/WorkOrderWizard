@@ -9,6 +9,14 @@ header, footer, nav, section {
     display: block;
 }
 
+.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menuitem {
+    display: inline;
+}
 
 /* Styles for basic forms
 -----------------------------------------------------------*/

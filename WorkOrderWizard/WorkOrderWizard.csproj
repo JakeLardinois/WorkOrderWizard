@@ -47,7 +47,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -145,7 +147,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\InMemoryRepositories.cs" />
     <Compile Include="Models\JQueryDataTablesModel.cs" />
     <Compile Include="Models\JQueryDataTablesModelBinder.cs" />
@@ -155,6 +156,7 @@
       <DependentUpon>mp250db.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MyExtensionMethods.cs" />
+    <Compile Include="Models\PartialEDMXClasses.cs" />
     <Compile Include="Models\QueryDefs.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -177,10 +179,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Syteline.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\WorkOrder.cs" />
-    <Compile Include="Models\WorkOrderEquipment.cs" />
     <Compile Include="Models\WorkOrderSearch.cs" />
-    <Compile Include="Models\WorkOrderTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
@@ -191,7 +190,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\fg.menu.css" />
+    <Content Include="App_Data\mp250db.mdb" />
     <Content Include="Content\html5-reset.css" />
     <Content Include="Content\images\buttonbg.png" />
     <Content Include="Content\images\details_close.png" />
@@ -625,7 +624,6 @@
     <Content Include="Scripts\DataTables-1.10.2\media\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables-1.10.2\media\js\jquery.js" />
     <Content Include="Scripts\DateTimeFormatter.js" />
-    <Content Include="Scripts\fg.menu.js" />
     <Content Include="Scripts\JEditable-1.7.3\contributed\jquery.jeditable.datepicker.js" />
     <Content Include="Scripts\JEditable-1.7.3\contributed\jquery.jeditable.selectdate.js" />
     <Content Include="Scripts\JEditable-1.7.3\css\datePicker.css" />
@@ -686,7 +684,6 @@
     <Content Include="WebForm1.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\themes\" />
   </ItemGroup>
   <ItemGroup>

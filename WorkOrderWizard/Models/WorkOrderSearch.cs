@@ -7,6 +7,15 @@ namespace WorkOrderWizard.Models
 {
     public class WorkOrderSearch
     {
+        public WorkOrderSearch()
+        {
+            WONUM = string.Empty;
+            TASKDESC = string.Empty;
+            ORIGINATOR = string.Empty;
+            PRIORITY = string.Empty;
+
+        }
+
         public string WONUM { get; set; }
         public DateTime CLOSEDATEGT { get; set; }
         public DateTime CLOSEDATELT { get; set; }

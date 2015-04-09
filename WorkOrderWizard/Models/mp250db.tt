@@ -1,4 +1,4 @@
-<#@ template language="C#" debug="True" hostSpecific="True"                        #>
+<#@ template language="C#" debug="true" hostSpecific="true"                        #>
 <#@ output extension=".generated.cs"                                               #>
 <#@ include file="$(ProjectDir)LinqToDB.Templates\LinqToDB.Access.Tools.ttinclude" #>
 <#@ include file="$(ProjectDir)LinqToDB.Templates\PluralizationService.ttinclude"  #>
@@ -45,16 +45,25 @@
 
 	NamespaceName = "WorkOrderWizard.Models";
 
-	var map = new ExeConfigurationFileMap();
-	map.ExeConfigFilename = this.Host.ResolvePath(@"..\..\WorkOrderWizard\Web.config");
-	var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-	var connectionString = config.ConnectionStrings.ConnectionStrings["mp250db"].ConnectionString;
+	//var map = new ExeConfigurationFileMap();
+	//map.ExeConfigFilename = this.Host.ResolvePath(@"..\..\WorkOrderWizard\Web.config");
+
+	//var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+	//var connectionString = config.ConnectionStrings.ConnectionStrings["mp250db"].ConnectionString;
+
+
+	var configFileMap = new ExeConfigurationFileMap();
+	configFileMap.ExeConfigFilename = this.Host.ResolvePath(@"..\..\WorkOrderWizard\Web.config");
+	Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+	string connectionString = config.ConnectionStrings.ConnectionStrings["mp250db"].ConnectionString;
+
+
 
 //	LoadAccessMetadata(@"C:\Data", "MyDatabase.mdb");
 //	LoadAccessMetadata(string connectionString);
 //	LoadAccessMetadata(Host.ResolvePath(".."), "TestData.mdb");
-	LoadAccessMetadata(connectionString);
-
-//	LoadAccessMetadata(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\JakeL\Desktop\OffSiteCS\WorkOrderWizard\WorkOrderWizard\App_Data\mp250db.mdb;Persist Security Info=True;Jet OLEDB:Database Password=***REMOVED***");
+	
+//	LoadAccessMetadata(connectionString);
+	LoadAccessMetadata(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\JakeL\Desktop\OffSiteCS\WorkOrderWizard\WorkOrderWizard\App_Data\mp250db.mdb;Persist Security Info=True;Jet OLEDB:Database Password=***REMOVED***");
 	GenerateModel();
 #>

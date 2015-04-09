@@ -1,25 +1,22 @@
 ﻿@{
-    ViewBag.Title = "Work Order Home Page";
+    ViewBag.Title = "Work Orders";
 }
 
 
-<h2>Work Order Home Page</h2>
+<br>
+<br>
+<h2>Set the Style...</h2>
 <br>
 <br>
 <div id="PersonalSwitcher" ></div>
-<p>
-    @Html.ActionLink("Create Work Orders", "CreateWorkOrders", "Home")
-</p>
-<p>
-    @Html.ActionLink("View Work Orders", "ViewWorkOrders", "Home")
-</p>
+
 
 
 @section Scripts{
     <script type="text/javascript">
         var sImagesURL = '@Url.Content("~/Content/images/")';
+        var sWOTypesURL = '@Url.Action("WorkOrderTypes", "MP2")';
+        var sWOEquipmentListURL = '@Url.Action("EquipmentList", "MP2")';
 
-    </script>
-    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/index")">
     </script>
 }

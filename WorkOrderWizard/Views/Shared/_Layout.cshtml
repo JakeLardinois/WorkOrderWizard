@@ -11,7 +11,16 @@
     @RenderSection("styles", false)
 </head>
 <body>
-
+    <nav>
+        <ul class="menu">
+            <li class="menuitem">
+                @Html.ActionLink("Create Work Orders", "CreateWorkOrders", "Home", new { id = "CreateWOMenuBtn" })
+            </li>
+            <li class="menuitem">
+                @Html.ActionLink("View Work Orders", "ViewWorkOrders", "Home", new { id = "ViewWOMenuBtn" })
+            </li>
+        </ul>
+    </nav>
     @RenderBody()
 
     @Scripts.Render("~/bundles/jquery")
@@ -23,6 +32,7 @@
     @Scripts.Render("~/bundles/impromptu")
     @Scripts.Render("~/bundles/autogrow")
     @Scripts.Render("~/bundles/datetimeformatter")
+    @Scripts.Render("~/bundles/index")
 
     @RenderSection("scripts", required: false)
 </body>

@@ -11,15 +11,16 @@ namespace WorkOrderWizard.Models
 {
     public class MP2_DataBaseSettings
     {
-        private static string mstrSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
+        
         public MP2_DataBaseSettings()
         {
             //string strSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
             OleDBConnection = new OleDbConnection(ConnectionString);
         }
 
-        //public static string ConnectionString { get { return AppDomain.CurrentDomain.SetData("DataDirectory", mstrSQLConnectionString); } }
-        public static string ConnectionString { get { return mstrSQLConnectionString.Replace("|DataDirectory|", AppDomain.CurrentDomain.GetData("DataDirectory").ToString()); } }
+        //private static string mstrSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
+        //public static string ConnectionString { get { return mstrSQLConnectionString.Replace("|DataDirectory|", AppDomain.CurrentDomain.GetData("DataDirectory").ToString()); } }
+        public static string ConnectionString { get { return System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString; } }
         public OleDbConnection OleDBConnection { get; set; }
     }
 
