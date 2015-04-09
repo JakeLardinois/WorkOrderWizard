@@ -13,18 +13,9 @@ namespace WorkOrderWizard.Controllers
         public ActionResult Index()
         {
 
-            return View("CreateWorkOrders");
-        }
-
-        public ActionResult CreateWorkOrders()
-        {
+            //return View("CreateWorkOrders");
             return View();
         }
 
-        [HttpGet]
-        public ActionResult ViewWorkOrders()
-        {
-            return View();
-        }
     }
 }

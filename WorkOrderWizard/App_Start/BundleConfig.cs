@@ -44,10 +44,6 @@ namespace WorkOrderWizard
 
             bundles.Add(new ScriptBundle("~/bundles/index").Include(
                         "~/Scripts/index.js"));
-            bundles.Add(new ScriptBundle("~/bundles/createworkorders").Include(
-                        "~/Scripts/createworkorders.js"));
-            bundles.Add(new ScriptBundle("~/bundles/viewworkorders").Include(
-                        "~/Scripts/viewworkorders.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jeditable").Include(
                         "~/Scripts/JEditable-1.7.3/jquery.jeditable.js"));

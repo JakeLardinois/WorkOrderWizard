@@ -110,20 +110,20 @@ namespace WorkOrderWizard.Models
                         //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
                         .Select(c => c.w)
                         .OrderByDescending(c => c.WONUM)
-                        .GroupBy(c => new { WONUM = c.WONUM, CLOSEDATE = c.CLOSEDATE })
                         .Select(g => new WO
                         {
-                            WONUM = g.Key.WONUM,
-                            CLOSEDATE = g.Key.CLOSEDATE,
-                            ORIGINATOR = g.Min(w => w.ORIGINATOR),
-                            PRIORITY = g.Min(w => w.PRIORITY),
-                            REQUESTDATE = g.Min(w => w.REQUESTDATE),
-                            REQUESTTIME = g.Min(w => w.REQUESTTIME),
-                            TASKDESC = g.Min(w => w.TASKDESC),
-                            //NOTES = g.Where .NOTES,
-                            WOTYPE = g.Min(w => w.WOTYPE),
-                            STATUS = g.Min(w => w.STATUS)
+                            WONUM = g.WONUM,
+                            CLOSEDATE = g.CLOSEDATE,
+                            ORIGINATOR = g.ORIGINATOR,
+                            PRIORITY = g.PRIORITY,
+                            REQUESTDATE = g.REQUESTDATE,
+                            REQUESTTIME = g.REQUESTTIME,
+                            TASKDESC = g.TASKDESC,
+                            NOTES = g.NOTES,
+                            WOTYPE = g.WOTYPE,
+                            STATUS = g.STATUS
                         })
+                        .Distinct()
                         .ToList();
                 }
                 else

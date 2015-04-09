@@ -4,19 +4,138 @@
 
 
 <br>
-<br>
-<h2>Set the Style...</h2>
-<br>
-<br>
 <div id="PersonalSwitcher" ></div>
+<br>
+<br>
 
+<table id="objItems">
+    <thead>
+        <tr class="dtSearchFields">
+            <th>
+                <input class="dtSearchField" style="width: 100px" placeholder="WONUM" id="WONUMFilter">
+            </th>
+            <th>
+                <select id="WOEQLISTFilter" multiple="multiple" ></select>
+            </th>
+            <th>
+            </th>
+            <th>
+                <select id="STATUSFilter" multiple="multiple"></select>
+            </th>
+            <th>
+                <select id="PRIORITYFilter" multiple="multiple"></select>
+            </th>
+            <th>
+                <select id="WOTYPEFilter" multiple="multiple"></select>
+            </th>
+            <th>
+                <input class="dtSearchField" style="width: 100px" placeholder="ORIGINATOR" id="ORIGINATORFilter">
+            </th>
+            <th>
+                <input class="dtSearchField" style="width: 100px" placeholder="From" id="REQUESTDATEFromFilter">
+                <input class="dtSearchField" style="width: 100px" placeholder="To" id="REQUESTDATEToFilter">
+            </th>
+            <th>
+            </th>
+            <th>
+                <input class="dtSearchField" style="width: 100px" placeholder="From" id="CLOSEDATEFromFilter">
+                <input class="dtSearchField" style="width: 100px" placeholder="To" id="CLOSEDATEToFilter">
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <label for="WONUMFilter">Work Order</label>
+            </th>
+            <th>
+                <label for="WOEQLISTFilter">Equipment</label>
+            </th>
+            <th>
+                <label for="TASKDESC">Description</label>
+            </th>
+            <th>
+                <label for="STATUSFilter">Status</label>
+            </th>
+            <th>
+                <label for="PRIORITYFilter">Priority</label>
+            </th>
+            <th>
+                <label for="WOTYPEFilter">Type</label>
+            </th>
+            <th>
+                <label for="ORIGINATORFilter">Originator</label>
+            </th>
+            <th>
+                <label for="REQUESTDATEFilter">Date Requested</label>
+            </th>
+            <th>
+                <label for="REQUESTTIME">Time Requested</label>
+            </th>
+            <th>
+                <label for="CLOSEDATEFilter">Date Closed</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
+<div id='DescriptionDialogDiv' style="display: none;">
+</div>
+
+@section styles{
+    <link rel="Stylesheet" href="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/Content/datatables")" />
+}
 
 @section Scripts{
     <script type="text/javascript">
+        var sOpenImageUrl = '@Url.Content("~/Content/images/details_open.png")';
+        var sCloseImageUrl = '@Url.Content("~/Content/images/details_close.png")';
+        var sProgressImageUrl = '@Url.Content("~/Content/images/Progress.gif")';
         var sImagesURL = '@Url.Content("~/Content/images/")';
+        var sGetWorkOrdersUrl = '@Url.Action("GetWorkOrders", "MP2")';
         var sWOTypesURL = '@Url.Action("WorkOrderTypes", "MP2")';
         var sWOEquipmentListURL = '@Url.Action("EquipmentList", "MP2")';
+        var sPrintWorkOrdersUrl = '@Url.Action("GenerateWOReport", "MP2")';
+        var sWONotesUpdateUrl = '@Url.Action("UpdateWONote", "MP2")';
+        var sSLEmployeeLookupURL = '@Url.Action("GetSLEmployee", "MP2")';
 
+
+        function GetEquipTableHTML(oTable, nTr, sTableName) {
+            var oData = oTable.row(nTr).data();
+
+            var sOut =
+                '<div style="padding-left: 50px" class="innerDetails">' +
+                    '<table id="' + sTableName + '">' +
+                        '<thead>' +
+                            '<tr>' +
+                                '<th>' +
+                                    'Equipment' +
+                                '</th>' +
+                                '<th>' +
+                                    'Description' +
+                                '</th>' +
+                                '<th>' +
+                                    'Location' +
+                                '</th>' +
+                                '<th>' +
+                                    'Sub Location' +
+                                '</th>' +
+                                '<th>' +
+                                    'Department' +
+                                '</th>' +
+                            '</tr>' +
+                        '</thead>' +
+                        '<tbody></tbody>' +
+                    '</table>' +
+                '</div>';
+
+            return sOut;
+        }
+    </script>
+
+    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/datatables")">
+    </script>
+    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/jeditable")">
+    </script>
+    <script type="text/javascript" src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/index")">
     </script>
 }

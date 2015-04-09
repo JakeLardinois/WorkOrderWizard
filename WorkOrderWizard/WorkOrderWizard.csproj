@@ -664,9 +664,7 @@
     <Content Include="Scripts\jquery.multiselect.filter.js" />
     <Content Include="Scripts\jquery.multiselect.js" />
     <Content Include="Scripts\jquery.themeswitcher.js" />
-    <Content Include="Scripts\createworkorders.js" />
     <Content Include="Scripts\index.js" />
-    <Content Include="Scripts\viewworkorders.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -730,8 +728,6 @@
     <Content Include="LinqToDB.Templates\!ReadMe.LinqToDB.md" />
     <Content Include="LinqToDB.Templates\LinqToDB.Access.Tools.ttinclude" />
     <None Include="Properties\PublishProfiles\Server2008.pubxml" />
-    <Content Include="Views\Home\CreateWorkOrders.cshtml" />
-    <Content Include="Views\Home\ViewWorkOrders.cshtml" />
     <Content Include="Scripts\DataTables-1.10.2\bower.json" />
     <Content Include="Scripts\DataTables-1.10.2\composer.json" />
     <Content Include="Scripts\DataTables-1.10.2\Contributing.md" />
