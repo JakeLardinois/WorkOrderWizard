@@ -28,7 +28,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>WONUM</Value>
+                              <Value>EQNUM</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -116,21 +116,21 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="WONUM">
+                    <Textbox Name="EQNUM">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!WONUM.Value</Value>
+                              <Value>=Fields!EQNUM.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>WONUM</rd:DefaultName>
+                      <rd:DefaultName>EQNUM</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -176,40 +176,6 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox9">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style />
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox9</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-              </TablixCells>
-            </TablixRow>
-            <TablixRow>
-              <Height>0.25in</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
                     <Textbox Name="Textbox6">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -238,29 +204,6 @@
                     </Textbox>
                   </CellContents>
                 </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Subreport Name="WOEquipment">
-                      <ReportName>WorkOrderEquipmentSub</ReportName>
-                      <Parameters>
-                        <Parameter Name="WONum">
-                          <Value>=Fields!WONUM.Value</Value>
-                        </Parameter>
-                        <Parameter Name="CloseDate">
-                          <Value>=Fields!CLOSEDATE.Value</Value>
-                        </Parameter>
-                      </Parameters>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                      </Style>
-                    </Subreport>
-                    <ColSpan>2</ColSpan>
-                    <rd:Selected>true</rd:Selected>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell />
               </TablixCells>
             </TablixRow>
           </TablixRows>
@@ -279,17 +222,13 @@
             </TablixMember>
             <TablixMember>
               <Group Name="Details" />
-              <TablixMembers>
-                <TablixMember />
-                <TablixMember />
-              </TablixMembers>
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>WorkOrders</DataSetName>
-        <Top>0.37375in</Top>
-        <Left>1.405in</Left>
-        <Height>0.75in</Height>
+        <DataSetName>WorkOrderEquipment</DataSetName>
+        <Top>0.78in</Top>
+        <Left>1.75917in</Left>
+        <Height>0.5in</Height>
         <Width>3in</Width>
         <Style>
           <Border>
@@ -316,11 +255,11 @@
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>2cdab95d-07ec-4606-9e2c-22387d8477fb</rd:DataSourceID>
+      <rd:DataSourceID>8fc31aac-034f-4f79-8779-5475ae73c138</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="WorkOrders">
+    <DataSet Name="WorkOrderEquipment">
       <Query>
         <DataSourceName>WorkOrderWizardModels</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
@@ -334,216 +273,146 @@
           <DataField>CLOSEDATE</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="PRINTIT">
-          <DataField>PRINTIT</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="TASKNUM">
-          <DataField>TASKNUM</DataField>
+        <Field Name="EQNUM">
+          <DataField>EQNUM</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="RESPONSEDAYS">
-          <DataField>RESPONSEDAYS</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
+        <Field Name="LOCATION">
+          <DataField>LOCATION</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="RESPONSEHRS">
-          <DataField>RESPONSEHRS</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
+        <Field Name="SUBLOCATION1">
+          <DataField>SUBLOCATION1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ACTUALDURATION">
-          <DataField>ACTUALDURATION</DataField>
+        <Field Name="SUBLOCATION2">
+          <DataField>SUBLOCATION2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SUBLOCATION3">
+          <DataField>SUBLOCATION3</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SERIALNUM">
+          <DataField>SERIALNUM</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DEPARTMENT">
+          <DataField>DEPARTMENT</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="COSTCENTER">
+          <DataField>COSTCENTER</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GENLEDGERNUM">
+          <DataField>GENLEDGERNUM</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DOWNTIME">
+          <DataField>DOWNTIME</DataField>
           <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
-        <Field Name="TASKDESC">
-          <DataField>TASKDESC</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="MUSTBEDOWN">
+          <DataField>MUSTBEDOWN</DataField>
+          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
-        <Field Name="WOTYPE">
-          <DataField>WOTYPE</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="ESTDOWNTIME">
+          <DataField>ESTDOWNTIME</DataField>
+          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
-        <Field Name="SCHEDSTARTDATE">
-          <DataField>SCHEDSTARTDATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="SCHEDFINISHDATE">
-          <DataField>SCHEDFINISHDATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="ASSIGNEDTO">
-          <DataField>ASSIGNEDTO</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="UNDERWARRANTY">
+          <DataField>UNDERWARRANTY</DataField>
+          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
         <Field Name="PRIORITY">
           <DataField>PRIORITY</DataField>
           <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
         </Field>
-        <Field Name="WORKPRIORITY">
-          <DataField>WORKPRIORITY</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="STATUS">
-          <DataField>STATUS</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="DELAYDESC">
-          <DataField>DELAYDESC</DataField>
+        <Field Name="UD1">
+          <DataField>UD1</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="EXPENSECLASS">
-          <DataField>EXPENSECLASS</DataField>
+        <Field Name="UD2">
+          <DataField>UD2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="REQUESTTIME">
-          <DataField>REQUESTTIME</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="REQUESTDATE">
-          <DataField>REQUESTDATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="EXT">
-          <DataField>EXT</DataField>
+        <Field Name="UD3">
+          <DataField>UD3</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="PHONE">
-          <DataField>PHONE</DataField>
+        <Field Name="UD4">
+          <DataField>UD4</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ORIGINATOR">
-          <DataField>ORIGINATOR</DataField>
+        <Field Name="UD5">
+          <DataField>UD5</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="COMPLETIONDATE">
-          <DataField>COMPLETIONDATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="COMPLETIONTIME">
-          <DataField>COMPLETIONTIME</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="PERFBYWARRANTY">
-          <DataField>PERFBYWARRANTY</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="ASSIGNEDBY">
-          <DataField>ASSIGNEDBY</DataField>
+        <Field Name="UD6">
+          <DataField>UD6</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="PICKLIST">
-          <DataField>PICKLIST</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="ESTDURATION">
-          <DataField>ESTDURATION</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="RESPONSEMINS">
-          <DataField>RESPONSEMINS</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="TENANT">
-          <DataField>TENANT</DataField>
+        <Field Name="UD7">
+          <DataField>UD7</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ESTCOST">
-          <DataField>ESTCOST</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="BILLABLE">
-          <DataField>BILLABLE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="LABORTAXRATE">
-          <DataField>LABORTAXRATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="MATERIALTAXRATE">
-          <DataField>MATERIALTAXRATE</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="LABORMARKUP">
-          <DataField>LABORMARKUP</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="MATERIALMARKUP">
-          <DataField>MATERIALMARKUP</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="SCHEDSTARTTIME">
-          <DataField>SCHEDSTARTTIME</DataField>
-          <rd:TypeName>System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="FAXNUM">
-          <DataField>FAXNUM</DataField>
+        <Field Name="UD8">
+          <DataField>UD8</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="RESTORED">
-          <DataField>RESTORED</DataField>
-          <rd:TypeName>System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]</rd:TypeName>
-        </Field>
-        <Field Name="ATFIRSTNAME">
-          <DataField>ATFIRSTNAME</DataField>
+        <Field Name="UD9">
+          <DataField>UD9</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ATLASTNAME">
-          <DataField>ATLASTNAME</DataField>
+        <Field Name="UD10">
+          <DataField>UD10</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ABFIRSTNAME">
-          <DataField>ABFIRSTNAME</DataField>
+        <Field Name="EQDESC">
+          <DataField>EQDESC</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ABLASTNAME">
-          <DataField>ABLASTNAME</DataField>
+        <Field Name="RFOCODE">
+          <DataField>RFOCODE</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ORGFIRSTNAME">
-          <DataField>ORGFIRSTNAME</DataField>
+        <Field Name="SOLUTION">
+          <DataField>SOLUTION</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ORGLASTNAME">
-          <DataField>ORGLASTNAME</DataField>
+        <Field Name="HTMLTEXTS">
+          <DataField>HTMLTEXTS</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="NOTES">
-          <DataField>NOTES</DataField>
+        <Field Name="TEXTS">
+          <DataField>TEXTS</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="WOEQLIST">
-          <DataField>WOEQLIST</DataField>
-          <rd:TypeName>System.Collections.Generic.List`1[[WorkOrderWizard.Models.WOEQLIST, WorkOrderWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]</rd:TypeName>
-        </Field>
-        <Field Name="HTMLWONotes">
-          <DataField>HTMLWONotes</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="WOPriority">
-          <DataField>WOPriority</DataField>
-          <rd:TypeName>System.String[]</rd:TypeName>
-        </Field>
-        <Field Name="WOType">
-          <DataField>WOType</DataField>
-          <rd:TypeName>System.String[]</rd:TypeName>
-        </Field>
-        <Field Name="WOEquipment">
-          <DataField>WOEquipment</DataField>
-          <rd:TypeName>System.String[]</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeInfo">
-          <DataField>EmployeeInfo</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="WOC">
+          <DataField>WOC</DataField>
+          <rd:TypeName>WorkOrderWizard.Models.WOC</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>WorkOrderWizard.Models</rd:DataSetName>
-        <rd:TableName>WorkOrders</rd:TableName>
+        <rd:TableName>WorkOrderEquipment</rd:TableName>
         <rd:ObjectDataSourceSelectMethod>FindAll</rd:ObjectDataSourceSelectMethod>
-        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[WorkOrderWizard.Models.WO] FindAll(System.Predicate`1[WorkOrderWizard.Models.WO])</rd:ObjectDataSourceSelectMethodSignature>
-        <rd:ObjectDataSourceType>WorkOrderWizard.Models.WorkOrders, WorkOrderWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[WorkOrderWizard.Models.WOEQLIST] FindAll(System.Predicate`1[WorkOrderWizard.Models.WOEQLIST])</rd:ObjectDataSourceSelectMethodSignature>
+        <rd:ObjectDataSourceType>WorkOrderWizard.Models.WorkOrderEquipment, WorkOrderWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="WONum">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="CloseDate">
+      <DataType>DateTime</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+  </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>f79e19f6-9d54-473e-81ec-5465d2df489b</rd:ReportID>
+  <rd:ReportID>d27332fe-443c-402a-9bd9-45dfa282db14</rd:ReportID>
 </Report>

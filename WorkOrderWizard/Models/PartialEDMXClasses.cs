@@ -25,62 +25,8 @@ namespace WorkOrderWizard.Models
 
         }
 
-        public WO(string WONUM, DateTime CLOSEDATE)
-            : base()
-        {
-            MP2_DataBaseSettings db = new MP2_DataBaseSettings();
-            List<WOEQLIST> objWorkOrderEquipmentList;
-            DataTable objDataTable;
-            int intTemp;
-
-
-            objStrBldrSQL.Clear();
-            objStrBldrSQL.Append(QueryDefinitions.GetQuery("SelectWOAndEQLISTByWONumAndCloseDate", new[] { WONUM, CLOSEDATE.ToString("d") }));
-
-            using (db.OleDBConnection)
-            {
-                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldrSQL.ToString(), db.OleDBConnection);
-                db.OleDBConnection.Open();
-                OleDbDataReader objOleDbDataReader = objOleDbCommand.ExecuteReader();
-                objDataTable = new DataTable();
-                objDataTable.Load(objOleDbDataReader);
-                db.OleDBConnection.Close();
-
-                var recordset = objDataTable.AsEnumerable();
-                if (recordset.Count() != 0)
-                {
-                    WONUM = recordset.First().Field<string>("WONUM");
-                    CLOSEDATE = recordset.First().Field<DateTime>("CLOSEDATE");
-                    ORIGINATOR = recordset.First().Field<string>("ORIGINATOR");
-                    PRIORITY = recordset.First().Field<double?>("PRIORITY");
-                    REQUESTDATE = recordset.First().Field<DateTime?>("REQUESTDATE");
-                    REQUESTTIME = recordset.First().Field<DateTime?>("REQUESTTIME");
-                    TASKDESC = recordset.First().Field<string>("TASKDESC");
-                    NOTES = recordset.First().Field<string>("NOTES");
-                    WOTYPE = recordset.First().Field<string>("WOTYPE");
-                    STATUS = recordset.First().Field<char?>("STATUS");
-
-                    WOEQLIST = recordset
-                        .DefaultIfEmpty(objDataTable.NewRow()) //Handles the problem where MP2 has data orphans...
-                        .Select(g => new WOEQLIST
-                        {
-                            WONUM = g.Field<string>("WOEQWONUM"),
-                            CLOSEDATE = g.Field<DateTime>("WOEQCLOSEDATE"),
-                            EQNUM = g.Field<string>("WOEQWONUM"),
-                            LOCATION = g.Field<string>("LOCATION"),
-                            SUBLOCATION1 = g.Field<string>("SUBLOCATION1"),
-                            SUBLOCATION2 = g.Field<string>("SUBLOCATION2"),
-                            SUBLOCATION3 = g.Field<string>("SUBLOCATION3"),
-                            DEPARTMENT = g.Field<string>("DEPARTMENT"),
-                            EQDESC = g.Field<string>("EQDESC")
-                        })
-                    .ToList();
-                }
-
-            }
-        }
-
-        public List<WOEQLIST> WOEQLIST { 
+        public virtual List<WOEQLIST> WOEQLIST
+        { 
             get {
                 if (!string.IsNullOrEmpty(WONUM))
                     using (var db = new mp250dbDB())
@@ -97,29 +43,6 @@ namespace WorkOrderWizard.Models
                 mWOEQLIST = value;
             }
         }
-        //public List<WorkOrderEquipment> WOEQLIST
-        //{
-        //    get
-        //    {
-        //        using (var db = new mp250dbDB())
-        //        {
-        //            return db.WOEQLISTs
-        //                .Where(w => w.WONUM.Equals(WONUM))
-        //                .Select(w => new WorkOrderEquipment {
-        //                    WONUM = w.WONUM,
-        //                    CLOSEDATE = w.CLOSEDATE,
-        //                    EQNUM = w.EQNUM,
-        //                    LOCATION = w.LOCATION,
-        //                    SUBLOCATION1 = w.SUBLOCATION1,
-        //                    SUBLOCATION2 = w.SUBLOCATION2,
-        //                    SUBLOCATION3 = w.SUBLOCATION3,
-        //                    DEPARTMENT = w.DEPARTMENT,
-        //                    EQDESC = w.EQDESC
-        //                })
-        //                .ToList();
-        //        }
-        //    }
-        //}
        
         public virtual string HTMLWONotes
         {
@@ -135,10 +58,10 @@ namespace WorkOrderWizard.Models
         }
 
         //POST variables...
-        public string[] WOPriority { get; set; }
-        public string[] WOType { get; set; }
-        public string[] WOEquipment { get; set; }
-        public string EmployeeInfo { get; set; }
+        public virtual string[] WOPriority { get; set; }
+        public virtual string[] WOType { get; set; }
+        public virtual string[] WOEquipment { get; set; }
+        public virtual string EmployeeInfo { get; set; }
 
         public string GetNextWorkOrderNum()
         {
@@ -328,6 +251,9 @@ namespace WorkOrderWizard.Models
 
     public partial class WOEQLIST
     {
+        private WOC mWOC { get; set; }
+
+
         public WOEQLIST()
             : base()
         {
@@ -363,11 +289,57 @@ namespace WorkOrderWizard.Models
 
             return new QueryStatus { RecordsAffected = intRecordsAffected };
         }
+
+        public virtual string HTMLTEXTS
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(TEXTS))
+                    return TEXTS
+                        .Replace(Environment.NewLine, "<br />")
+                        .Replace("\n", "<br />");
+                else
+                    return string.Empty;
+            }
+        }
+
+        public virtual string TEXTS
+        { 
+            get {
+                if (WOC != null)
+                    return WOC.TEXTS;
+                else
+                    return string.Empty;
+            } 
+        }
+
+        public virtual WOC WOC
+        {
+            get { 
+                if (!string.IsNullOrEmpty(EQNUM))
+                    using (var db = new mp250dbDB())
+                    {
+                        mWOC = db.WOCs
+                            .Where(w => w.WONUM.Equals(WONUM) && 
+                                (w.CLOSEDATE == CLOSEDATE) &&
+                                w.EQNUM == EQNUM && 
+                                w.LOCATION == LOCATION && 
+                                w.SUBLOCATION1 == SUBLOCATION1 &&
+                                w.SUBLOCATION2 == SUBLOCATION2 &&
+                                w.SUBLOCATION3 == SUBLOCATION3)
+                            .DefaultIfEmpty(new WOC { TEXTS = string.Empty})
+                            .SingleOrDefault();
+                    }
+                return mWOC;
+            }
+            set { mWOC = value; }
+        }
     }
 
     public partial class EQUIP
     {
-        public string DescriptionDisplay { 
+        public virtual string DescriptionDisplay
+        { 
             get { 
                 return EQNUM + ": " + DESCRIPTION; 
             }

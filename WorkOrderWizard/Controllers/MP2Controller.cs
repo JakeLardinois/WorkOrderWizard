@@ -16,6 +16,8 @@ namespace WorkOrderWizard.Controllers
     public class MP2Controller : Controller
     {
 
+        private IList<WO> WorkOrderCollection { get; set; }
+
         [HttpGet]
         public JsonResult WorkOrderTypes()
         {
@@ -135,10 +137,10 @@ namespace WorkOrderWizard.Controllers
             int totalRecordCount, searchRecordCount;
 
 
-            var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
+            WorkOrderCollection = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
 
-            RenderWorkOrderReport(objItems);
+            RenderWorkOrderReport(WorkOrderCollection);
             return View();  //note that this is never reached since RenderWorkOrderReport writes to the response stream
         }
 
@@ -155,6 +157,8 @@ namespace WorkOrderWizard.Controllers
             string[] streams;
 
             objLocalReport = new LocalReport { ReportPath = Server.MapPath(Settings.ReportDirectory + "WorkOrders.rdlc") };
+
+            objLocalReport.SubreportProcessing += new SubreportProcessingEventHandler(MySubreportEventHandler);
 
             //Give the reportdatasource a name so that we can reference it in our report designer
             WorkOrderDataSource = new ReportDataSource("WorkOrders", objItems);
@@ -193,6 +197,30 @@ namespace WorkOrderWizard.Controllers
             Response.End();
         }
 
+        private void MySubreportEventHandler(object sender, SubreportProcessingEventArgs e)
+        {
+            DateTime dtmTemp;
+
+
+            var objWONumParam = e.Parameters.Where(p => p.Name.Equals("WONum"))
+                .SingleOrDefault()
+                .Values[0];
+            var objCloseDateParam = e.Parameters.Where(p => p.Name.Equals("CloseDate"))
+                .SingleOrDefault()
+                .Values[0];
+
+            var dtmCloseDate = DateTime.TryParse(objCloseDateParam, out dtmTemp) ? dtmTemp : SharedVariables.MINDATE;
+
+
+            //WorkOrderCollection
+            var WOEquipment = WorkOrderCollection
+                .Where(w => w.WONUM == objWONumParam)
+                .Where(w => w.CLOSEDATE == dtmCloseDate)
+                .SingleOrDefault();
+
+            e.DataSources.Add(new ReportDataSource("WorkOrderEquipment", WOEquipment.WOEQLIST));
+        }
+
         [HttpPost]
         public JsonResult UpdateWONote(string WONUM, string CloseDate, string NoteContent)
         {
@@ -205,7 +233,12 @@ namespace WorkOrderWizard.Controllers
             objWorkOrder = new WO() { WONUM = WONUM, CLOSEDATE = CLOSEDATE, NOTES = NoteContent };
             blnResult = objWorkOrder.UpdateWONote();
 
-            objWorkOrder = new WO(WONUM, CLOSEDATE);
+            using (var db = new mp250dbDB())
+            {
+                objWorkOrder = db.WOes
+                    .Where(w => w.WONUM == WONUM && w.CLOSEDATE == CLOSEDATE)
+                    .Single();
+            }
 
             return Json(new { Success = blnResult, objWorkOrder.HTMLWONotes });
         }

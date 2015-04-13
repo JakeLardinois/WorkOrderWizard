@@ -13,7 +13,6 @@ namespace WorkOrderWizard.Controllers
         public ActionResult Index()
         {
 
-            //return View("CreateWorkOrders");
             return View();
         }
 

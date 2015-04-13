@@ -125,6 +125,8 @@ Date.prototype.format = function (mask, utc) {
 };
 
 
+var strMinDate = dateFormat(new Date(1900, 0, 1), "mm-dd-yyyy"); // '1/1/1900';
+
 function FormatDate(objDate, blnIncludeTime) {
     if (objDate === null || objDate === undefined) { return strMinDate; }
 

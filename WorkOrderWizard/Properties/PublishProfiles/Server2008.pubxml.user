@@ -10,7 +10,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Data/mp250db.mdb">
-      <publishTime>04/09/2015 16:28:17</publishTime>
+      <publishTime>04/09/2015 16:51:49</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>03/09/2015 09:56:39</publishTime>
@@ -57,8 +57,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/pt/Microsoft.ReportViewer.WebForms.resources.dll">
       <publishTime>06/24/2012 13:52:50</publishTime>
     </File>
+    <File Include="bin/Reports/WorkOrderEquipmentSub.rdlc">
+      <publishTime>04/12/2015 13:20:16</publishTime>
+    </File>
     <File Include="bin/Reports/WorkOrders.rdlc">
-      <publishTime>04/02/2015 20:48:40</publishTime>
+      <publishTime>04/12/2015 13:20:16</publishTime>
     </File>
     <File Include="bin/ru/Microsoft.ReportViewer.WebForms.resources.dll">
       <publishTime>06/24/2012 13:53:08</publishTime>
@@ -97,10 +100,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/09/2015 09:56:39</publishTime>
     </File>
     <File Include="bin/WorkOrderWizard.dll">
-      <publishTime>04/09/2015 16:35:05</publishTime>
+      <publishTime>04/12/2015 13:27:43</publishTime>
     </File>
     <File Include="bin/WorkOrderWizard.pdb">
-      <publishTime>04/09/2015 13:50:43</publishTime>
+      <publishTime>04/12/2015 13:20:18</publishTime>
     </File>
     <File Include="bin/zh-CHS/Microsoft.ReportViewer.WebForms.resources.dll">
       <publishTime>06/24/2012 13:53:48</publishTime>
@@ -1714,10 +1717,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/31/2015 05:26:41</publishTime>
     </File>
     <File Include="Scripts/DateTimeFormatter.js">
-      <publishTime>04/02/2015 05:10:37</publishTime>
+      <publishTime>04/11/2015 07:50:09</publishTime>
     </File>
     <File Include="Scripts/index.js">
-      <publishTime>04/09/2015 16:22:35</publishTime>
+      <publishTime>04/13/2015 05:41:03</publishTime>
     </File>
     <File Include="Scripts/JEditable-1.7.3/contributed/jquery.jeditable.datepicker.js">
       <publishTime>04/05/2015 06:33:27</publishTime>
@@ -1894,7 +1897,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/09/2015 16:22:35</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>04/09/2015 16:32:37</publishTime>
+      <publishTime>04/13/2015 05:41:04</publishTime>
     </File>
     <File Include="Views/Home/ViewWorkOrders.cshtml">
       <publishTime>04/09/2015 07:41:57</publishTime>
@@ -1912,7 +1915,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/09/2015 09:56:23</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/09/2015 14:44:17</publishTime>
+      <publishTime>04/12/2015 13:27:43</publishTime>
     </File>
     <File Include="WebForm1.aspx">
       <publishTime>04/02/2015 17:05:08</publishTime>

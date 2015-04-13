@@ -163,6 +163,7 @@
       <DependentUpon>QueryDefs.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\QueryStatus.cs" />
+    <Compile Include="Models\ReportDataLists.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\Syteline.Context.cs">
       <AutoGen>True</AutoGen>
@@ -190,7 +191,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\mp250db.mdb" />
     <Content Include="Content\html5-reset.css" />
     <Content Include="Content\images\buttonbg.png" />
     <Content Include="Content\images\details_close.png" />
@@ -682,6 +682,7 @@
     <Content Include="WebForm1.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Content\themes\" />
   </ItemGroup>
   <ItemGroup>
@@ -830,6 +831,9 @@
     <EmbeddedResource Include="Models\QueryDefs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>QueryDefs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\WorkOrderEquipmentSub.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\WorkOrders.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

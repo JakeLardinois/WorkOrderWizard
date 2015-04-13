@@ -482,7 +482,7 @@ $(document).ready(function () {
                 "bJQueryUI": true,
                 "aaData": oTable.row(rowIndex).data().WOEQLIST,
                 "sDom": "Rlfrtip", //Enables column reorder with resize
-                //"sDom": '<"top">rt<"bottom"flp><"clear">', //hides the filter box and the 'showing recordno of records' message
+                "sDom": '<"top">rt<"bottom"flp><"clear">', //hides the filter box and the 'showing recordno of records' message
                 "bFilter": false,   //hides the search box
                 "bPaginate": false, //disables paging functionality
                 //"bServerSide": true,
@@ -493,7 +493,18 @@ $(document).ready(function () {
                         "mDataProp": "EQNUM",
                         "sWidth": 60,
                     },
-                    { "mDataProp": "EQDESC" },
+                    {
+                        "mDataProp": null, //Note that I had a problem with this column being first because when the datatable loads, it automatically sorts based on the first column; since this column had a null value
+                        "sWidth": 60,
+                        "sClass": "eqipnotes center", //applies the control class to the cell and the center class(which center aligns the image)
+                        "bSortable": false,
+                        "bSearchable": false,
+                        "sDefaultContent": '<img src="' + sOpenImageUrl + '">'
+                    },
+                    {
+                        "mDataProp": "EQDESC",
+                        //"sWidth": 120,
+                    },
                     { "mDataProp": "LOCATION" },
                     { "mDataProp": "SUBLOCATION1" },
                     { "mDataProp": "DEPARTMENT" }]
@@ -509,6 +520,31 @@ $(document).ready(function () {
                 anOpen.splice(i, 1);
             });
         }
+
+        $('#' + sEquipTableName + ' tbody').on('click', 'td.eqipnotes', function () {
+            var tr = $(this).closest('tr'); //tr = this.parentNode;
+            var row = tInnerTable.row(tr);
+
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                $('img', this).attr('src', sOpenImageUrl);
+                row.child.hide();
+                //alert("closing");
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                $('img', this).attr('src', sCloseImageUrl);
+                var oData = row.data();
+                row.child(oData.HTMLTEXTS).show();
+                //alert("opening");
+                tr.addClass('shown');
+            }
+
+        });
+
+
     });
 
     $('#objItems tbody').on('click', 'td.desc', function () {
@@ -584,6 +620,7 @@ $(document).ready(function () {
         });
 
     });
+
 
     //This is so that you can cause a search to occur on keyup for input field by adding class="dtSearchField" to it's html...
     $('input.dtSearchField').on('keyup change', function () {
@@ -732,4 +769,3 @@ function AppendAdditionalParameters(aoData) {
         }
     }
 }
-
