@@ -169,7 +169,8 @@ namespace WorkOrderWizard.Models
             
 
             searchRecordCount = workorders.Count;
-
+            //I should include the sorting functionality into the above query that brings in records so that I would be able to view data such as the oldest record
+            //where i would need the query to include records from the first 1000 of the 18000 work orders in ascending order...
             IOrderedEnumerable<WO> sortedList = null;
             foreach (var sortedColumn in sortedColumns)
             {

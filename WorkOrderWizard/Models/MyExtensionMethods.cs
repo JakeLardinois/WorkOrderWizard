@@ -19,6 +19,11 @@ namespace WorkOrderWizard.Models
             return source.Substring(1, source.Length - 2);
         }
 
+        public static string RemoveTabAndNewLine(this string source)
+        {
+            return source.Replace(Environment.NewLine, " ").Replace('\t', ' ');
+        }
+
         public static string AddSingleQuotes(this string source)
         {
             string[] strArray;

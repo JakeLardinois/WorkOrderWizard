@@ -18,6 +18,7 @@ namespace WorkOrderWizard.Controllers
 
         private IList<WO> WorkOrderCollection { get; set; }
 
+
         [HttpGet]
         public JsonResult WorkOrderTypes()
         {
@@ -132,7 +133,7 @@ namespace WorkOrderWizard.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetWorkOrders(JQueryDataTablesModel jQueryDataTablesModel)
+        public void GetWorkOrders(JQueryDataTablesModel jQueryDataTablesModel, string Format = "Excel")
         {
             int totalRecordCount, searchRecordCount;
 
@@ -140,11 +141,29 @@ namespace WorkOrderWizard.Controllers
             WorkOrderCollection = InMemoryWorkOrdersRepository.GetWorkOrders(0, //MaxRecordCount get ignored when isDownloadReport is True...
                 searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel, isDownloadReport: true);
 
-            RenderWorkOrderReport(WorkOrderCollection);
-            return View();  //note that this is never reached since RenderWorkOrderReport writes to the response stream
+            switch (Format)
+            {
+                case "CSV":
+                    RenderWorkOrderCSVReport();
+                    break;
+                default:
+                    RenderWorkOrderReport();
+                    break;
+            }
         }
 
-        private void RenderWorkOrderReport(IList<WO> objItems)
+        private void RenderWorkOrderCSVReport()
+        {
+            var objWorkOrderCSVList = new WorkOrderCSVList(WorkOrderCollection);
+
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("content-disposition", "attachment; filename=Report.csv");
+            Response.Write(objWorkOrderCSVList.ToCSVString());
+            Response.End();
+        }
+
+        private void RenderWorkOrderReport()
         {
             string strReportType = "Excel";
             LocalReport objLocalReport;
@@ -161,7 +180,7 @@ namespace WorkOrderWizard.Controllers
             objLocalReport.SubreportProcessing += new SubreportProcessingEventHandler(MySubreportEventHandler);
 
             //Give the reportdatasource a name so that we can reference it in our report designer
-            WorkOrderDataSource = new ReportDataSource("WorkOrders", objItems);
+            WorkOrderDataSource = new ReportDataSource("WorkOrders", WorkOrderCollection);
 
             objLocalReport.DataSources.Add(WorkOrderDataSource);
             objLocalReport.Refresh();

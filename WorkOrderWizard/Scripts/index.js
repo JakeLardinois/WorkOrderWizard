@@ -371,21 +371,22 @@ $(document).ready(function () {
                         });*/
                     },
                 },
-                /*{
+                {
                     "sExtends": "download",
-                    "sButtonText": "Bitchin Download",
-                    "sUrl": sGetWorkOrdersUrl + "?&MaxRecordCount=0&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
+                    "sButtonText": "CSV Download",
+                    "sUrl": sGetWorkOrdersUrl, 
                     "fnClick": function (nButton, oConfig) {
-                        var oParams = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+
+                        AppendAdditionalParameters(aoData);
+
                         var iframe = document.createElement('iframe');
                         iframe.style.height = "0px";
                         iframe.style.width = "0px";
-                        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
-                        //oParams.push({ "name": "isDownloadReport", "value": true });
-                        iframe.src = oConfig.sUrl + "?" + $.param(oParams);
+                        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=CSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
                         document.body.appendChild(iframe);
                     },
-                }*/
+                }
             ]
         },
         //"sScrollX": "100%",
@@ -647,7 +648,8 @@ function FormatWOTypeSelectColumnJSON(x) {
     //Loop through the list
     for (i = 0; i < x.length; i++) {
         //because I use getJSON when doing a GET in my Ajax call, I have strongly typed JSON objects to use below...
-        finalEdit[i] = { value: x[i].WOTYPE, label: x[i].DESCRIPTION };
+        //finalEdit[i] = { value: x[i].WOTYPE, label: x[i].DESCRIPTION }; //when I switched to using LinqToCSV, tables with a column that had the same name, had _column appended to them...
+        finalEdit[i] = { value: x[i].WOTYPE_Column, label: x[i].DESCRIPTION };
     }
 
     return finalEdit;

@@ -57,6 +57,18 @@ namespace WorkOrderWizard.Models
             }
         }
 
+        public int DaysOpen {
+            get
+            {
+                if (STATUS != null && STATUS == 'C')
+                {
+                    var dtmRequestDate = REQUESTDATE ?? SharedVariables.MINDATE; //uses the null-coalescing operator to get the nullable REQUESTDATE to a DateTime object
+                    return (CLOSEDATE - dtmRequestDate).Days;
+                }
+                else
+                    return 0;
+            }
+        }
         //POST variables...
         public virtual string[] WOPriority { get; set; }
         public virtual string[] WOType { get; set; }

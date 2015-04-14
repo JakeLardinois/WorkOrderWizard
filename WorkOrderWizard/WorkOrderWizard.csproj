@@ -46,6 +46,10 @@
       <HintPath>..\packages\linq2db.1.0.7.1\lib\net45\linq2db.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LINQtoCSV, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LINQtoCSV.1.5.0.0\lib\net35\LINQtoCSV.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -180,6 +184,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Syteline.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\WorkOrderCSV.cs" />
     <Compile Include="Models\WorkOrderSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebForm1.aspx.cs">
