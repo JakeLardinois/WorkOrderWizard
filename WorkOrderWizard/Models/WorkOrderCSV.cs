@@ -44,6 +44,7 @@ namespace WorkOrderWizard.Models
             
         }
 
+        //http://www.codeproject.com/Articles/25133/LINQ-to-CSV-library
         public string ToCSVString()
         {
             Stream objStream;
@@ -159,6 +160,6 @@ namespace WorkOrderWizard.Models
         #endregion
 
         [CsvColumn(Name = "DaysOpen", FieldIndex = 21)]
-        public int DaysOpen { get; set; }
+        public int? DaysOpen { get; set; }
     }
 }

@@ -57,16 +57,25 @@ namespace WorkOrderWizard.Models
             }
         }
 
-        public int DaysOpen {
+        public virtual int? DaysOpen { //the int is made nullable so that it can be excluded from the pivot table calculation when invalid data is encountered
             get
             {
                 if (STATUS != null && STATUS == 'C')
                 {
+                    if (REQUESTDATE == null)
+                        return (int?)null;
+                    if (CLOSEDATE == SharedVariables.MINDATE)
+                        return (int?)null;
+
                     var dtmRequestDate = REQUESTDATE ?? SharedVariables.MINDATE; //uses the null-coalescing operator to get the nullable REQUESTDATE to a DateTime object
-                    return (CLOSEDATE - dtmRequestDate).Days;
+                    if (dtmRequestDate == SharedVariables.MINDATE)
+                        return (int?)null;
+
+                    var intDaysOpen = (CLOSEDATE - dtmRequestDate).Days;
+                    return intDaysOpen > 0 ? intDaysOpen : (int?)null;   //if the CLOSEDATE occurred before the REQUESTDATE (resulting in a negative) then the data is invalid and so a null is returned
                 }
                 else
-                    return 0;
+                    return (int?)null;
             }
         }
         //POST variables...

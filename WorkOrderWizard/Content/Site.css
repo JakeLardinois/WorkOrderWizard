@@ -119,3 +119,15 @@ form.WorkOrderWizard label {
 #EmployeeNo {
     width: 100px;
 }
+
+/*makes my datatables search, excel and csv buttons align to the left*/
+div.DTTT_container {
+    float: left; 
+    margin: 0;
+}
+
+/*puts the show qty entries under the above mentioned buttons and give a padding to them*/
+.dataTables_length {
+    clear: left;
+    padding-top: 10px;
+}

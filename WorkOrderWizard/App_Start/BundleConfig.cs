@@ -50,6 +50,11 @@ namespace WorkOrderWizard
 
 
 
+            bundles.Add(new StyleBundle("~/Content/reset").Include(
+                "~/Content/reset.css",
+                "~/Content/html5-reset.css",
+                "~/Content/site.css"));
+
             bundles.Add(new StyleBundle("~/Content/impromptu").Include(
                 "~/Content/jquery-impromptu.css"));
 
@@ -57,9 +62,7 @@ namespace WorkOrderWizard
                 "~/Content/jquery.multiselect.css",
                 "~/Content/jquery.multiselect.filter.css"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/reset.css",
-                "~/Content/html5-reset.css",
+            bundles.Add(new StyleBundle("~/Content/site").Include(
                 "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/datatables").Include(

@@ -286,12 +286,15 @@ $(document).ready(function () {
             blnCheckChanged = true;
         },
         close: function () {
-            if (blnCheckChanged) {
+            //I commented the below out in favor of utilizing a button to submit the search due to access being slow on queries...
+            /*if (blnCheckChanged) {
                 blnCheckChanged = false;
                 oTable.draw();
-            }
+            }*/
         }
     });
+
+    
 
     $.editable.addInputType('autogrow', {   //adds the autogrow plugin for editing notes
         element: function (settings, original) {
@@ -336,7 +339,7 @@ $(document).ready(function () {
         "bProcessing": true,
         "bServerSide": true,
         "bFilter": true,
-        "sDom": '<"clear">RlrtTip', //The 'R' enables column reorder with resize; UPDATE took out the f from "Rlfrtip" to hide the search textbox, T gives all the buttons
+        "sDom": 'T<"clear">Rlrtip', //The 'R' enables column reorder with resize; UPDATE took out the f from "Rlfrtip" to hide the search textbox, T gives all the buttons
         "oTableTools": {
             sRowSelect: "os", //enables the selection of rows //"multi" enables the selection of multiple rows
             sRowSelector: 'td:first-child', //sets the first column of the row as the one to select the row
@@ -345,6 +348,7 @@ $(document).ready(function () {
                     "sExtends": "download",
                     "sButtonText": "Excel Download",
                     "sUrl": sGetWorkOrdersUrl, //+ "?&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
+                    "sToolTip": "Download an Excel file based on the provided search criteria...",
                     "fnClick": function (nButton, oConfig) {
                         var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
@@ -374,7 +378,8 @@ $(document).ready(function () {
                 {
                     "sExtends": "download",
                     "sButtonText": "CSV Download",
-                    "sUrl": sGetWorkOrdersUrl, 
+                    "sUrl": sGetWorkOrdersUrl,
+                    "sToolTip": "Download a CSV file based on the provided search criteria...",
                     "fnClick": function (nButton, oConfig) {
                         var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
@@ -386,7 +391,23 @@ $(document).ready(function () {
                         iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=CSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
                         document.body.appendChild(iframe);
                     },
-                }
+                },
+                {
+                    "sExtends": "download",
+                    "sButtonText": "Submit Search",
+                    "sUrl": sGetWorkOrdersUrl,
+                    "sToolTip": "Refreshes the below table based on the provided search criteria...",
+                    "fnClick": function (nButton, oConfig) {
+                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+
+                        AppendAdditionalParameters(aoData);
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.height = "0px";
+                        iframe.style.width = "0px";
+                        oTable.draw();
+                    },
+                },
             ]
         },
         //"sScrollX": "100%",
@@ -624,9 +645,10 @@ $(document).ready(function () {
 
 
     //This is so that you can cause a search to occur on keyup for input field by adding class="dtSearchField" to it's html...
-    $('input.dtSearchField').on('keyup change', function () {
+    /*$('input.dtSearchField').on('keyup change', function () {
         oTable.draw(); //forces the table to redraw and the search criteria is set above
-    });
+    });*/
+    //I had to remove the above and create a search button because the Access Database was too slow to handle the multiple queries that occurred when users would type and select options...
 
 });
 

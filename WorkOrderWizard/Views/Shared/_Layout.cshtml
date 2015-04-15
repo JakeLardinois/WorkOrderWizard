@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/reset")
     @Styles.Render("~/Content/multiselect")
     @Styles.Render("~/Content/impromptu")
 
     @RenderSection("styles", false)
+    @Styles.Render("~/Content/site")
 </head>
 <body>
     <nav>
