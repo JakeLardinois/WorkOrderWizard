@@ -1,7 +1,14 @@
-If I work on a work order then it gets a 'Completed' status and then I 'Close' it in MP2.
-If I do not work on a work order (it was erroneously created or something) then I 'Close' it in MP2, but it's status never gets changed to 'Completed'
+Whenever a work order gets 'Closed' in MP2, it's status gets updated to 'C' (Completed). If the COMPLETIONDATE & COMPLETIONTIME fields are null, then they will also get updated with the current date and time
+	however, if COMPLETIONDATE & COMPLETIONTIME are NOT null, then they are NOT updated.
+
+When a Work Order gets it's status changed to 'Completed', MP2 updates the records COMPLETIONDATE & COMPLETIONTIME fields to the current date and time.
+
+In order for a work order to get placed into 'Work Order History', it must have a 'CLOSEDATE' value of 1/1/1900 and a Null 'COMPLETIONDATE' & 'COMPLETIONTIME'
 
 
+What are Work Order Statuses of 'M' for?
+
+1/6/2004  12:00:00 AM
 
 
 SELECT WO.WONUM, WO.CLOSEDATE, WO.PRINTIT, WO.TASKNUM, WO.RESPONSEDAYS, WO.RESPONSEHRS, WO.ACTUALDURATION, WO.TASKDESC, WO.WOTYPE, WO.SCHEDSTARTDATE, WO.SCHEDFINISHDATE, WO.ASSIGNEDTO, WO.PRIORITY, WO.WORKPRIORITY, WO.STATUS, WO.DELAYDESC, WO.EXPENSECLASS, WO.REQUESTTIME, WO.REQUESTDATE, WO.EXT, WO.PHONE, WO.ORIGINATOR, WO.COMPLETIONDATE, WO.COMPLETIONTIME, WO.PERFBYWARRANTY, WO.ASSIGNEDBY, WO.PICKLIST, WO.ESTDURATION, WO.RESPONSEMINS, WO.TENANT, WO.ESTCOST, WO.BILLABLE, WO.LABORTAXRATE, WO.MATERIALTAXRATE, WO.LABORMARKUP, WO.MATERIALMARKUP, WO.SCHEDSTARTTIME, WO.FAXNUM, WO.RESTORED, WO.ATFIRSTNAME, WO.ATLASTNAME, WO.ABFIRSTNAME, WO.ABLASTNAME, WO.ORGFIRSTNAME, WO.ORGLASTNAME
@@ -44,3 +51,19 @@ WHERE WONUM IN (~p0)
 (WONUM, CLOSEDATE, EQNUM,  LOCATION, SUBLOCATION1, SUBLOCATION2, SUBLOCATION3, DEPARTMENT, EQDESC)
 VALUES ('~p0', '~p1', '~p2', '~p3', '~p4', '~p5', '~p6', '~p7', '~p8')
 
+SELECT *
+FROM WO
+WHERE COMPLETIONDATE IS NULL
+
+SELECT *
+FROM WO
+WHERE COMPLETIONDATE IS NULL
+
+
+0100016140 closed with a status of open... when moved to history the status gets updated to C
+0100016787 closed with a status of Ready... when moved to history the status gets updated to C
+0100016790 closed with a status of Hold... when moved to history the status gets updated to C
+
+SELECT *
+FROM WO
+WHERE WONUM = '0100018108'

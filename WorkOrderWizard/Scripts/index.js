@@ -219,11 +219,14 @@ $(document).ready(function () {
     $("#REQUESTDATEToFilter").datepicker();
     $("#CLOSEDATEFromFilter").datepicker();
     $("#CLOSEDATEToFilter").datepicker();
+    $("#COMPLETIONDATEFromFilter").datepicker();
+    $("#COMPLETIONDATEToFilter").datepicker();
 
     $("#STATUSFilter").append("<option selected=\"selected\" value=\"O\">Open</option>");
     $("#STATUSFilter").append("<option value=\"R\">Ready</option>");
     $("#STATUSFilter").append("<option value=\"H\">Hold</option>");
     $("#STATUSFilter").append("<option value=\"C\">Completed</option>");
+    //$("#STATUSFilter").append("<option value=\"M\">Unknown</option>");
     $("#STATUSFilter").multiselect({
         multiple: true,
         hide: "explode",
@@ -339,6 +342,7 @@ $(document).ready(function () {
         "bProcessing": true,
         "bServerSide": true,
         "bFilter": true,
+        //"bPaginate": false,
         "sDom": 'T<"clear">Rlrtip', //The 'R' enables column reorder with resize; UPDATE took out the f from "Rlfrtip" to hide the search textbox, T gives all the buttons
         "oTableTools": {
             sRowSelect: "os", //enables the selection of rows //"multi" enables the selection of multiple rows
@@ -390,7 +394,7 @@ $(document).ready(function () {
                         iframe.style.width = "0px";
                         iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=CSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
                         document.body.appendChild(iframe);
-                    },
+                    }
                 },
                 {
                     "sExtends": "download",
@@ -471,9 +475,15 @@ $(document).ready(function () {
                 }
             },
             {
-                "mDataProp": "CLOSEDATE",
+                "mDataProp": "COMPLETIONDATE",
                 "render": function (data, type, full, meta) {
                     return FormatDate(data);
+                }
+            },
+            {
+                "mDataProp": "COMPLETIONTIME",
+                "render": function (data, type, full, meta) {
+                    return FormatTime(data);
                 }
             }]
     });
@@ -710,7 +720,7 @@ function AppendAdditionalParameters(aoData) {
     * I had previously implemented this in the server side code, but then any time my UI changed I would need to recompile the web service... So I fixed the implementation...*/
     aoData.push({
         "name": "FixedColumnHeaders",
-        "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "CLOSEDATE"]
+        "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "COMPLETIONDATE"]
     });
 
     /*iterates through the array and updates the appropriate object using the below 'case' statements. I was having an issue where sSearch was getting populated twice (ie sSearch_4 & sSearch_7 would contain the same search string) 
@@ -777,13 +787,13 @@ function AppendAdditionalParameters(aoData) {
                 aoData[i].value = true;
                 break;
             case "sSearch_9":
-                aoData[i].value = $('#CLOSEDATEFromFilter').val() + '~' +
-                        $('#CLOSEDATEToFilter').val();
+                aoData[i].value = $('#COMPLETIONDATEFromFilter').val() + '~' +
+                        $('#COMPLETIONDATEToFilter').val();
                 break;
             case "bRegex_9":
                 aoData[i].value = true;
                 break;
-            case "sSearch": //I set the sSearch variable so that I can easily grab the value from the controller to filter my initial WO list....
+            case "sSearch": //I set the sSearch variable so that I can easily grab the value from the controller to filter my initial WO list. UPDATE- No longer implemented...
                 strTemp = String($('#STATUSFilter').val());
                 if (strTemp !== 'null')
                     aoData[i].value = strTemp;

@@ -126,6 +126,7 @@ Date.prototype.format = function (mask, utc) {
 
 
 var strMinDate = dateFormat(new Date(1900, 0, 1), "mm-dd-yyyy"); // '1/1/1900';
+var strMinTime = dateFormat(new Date(1900, 0, 1), "h:MM TT"); // '1/1/1900';
 
 function FormatDate(objDate, blnIncludeTime) {
     if (objDate === null || objDate === undefined) { return strMinDate; }
@@ -141,7 +142,7 @@ function FormatDate(objDate, blnIncludeTime) {
 }
 
 function FormatTime(objDate) {
-    if (objDate === null || objDate === undefined) { return strMinDate; }
+    if (objDate === null || objDate === undefined) { return strMinTime; }
 
     var objDateProcessed = new Date(parseInt(objDate.replace("/Date(", "").replace(")/", ""), 10));
 

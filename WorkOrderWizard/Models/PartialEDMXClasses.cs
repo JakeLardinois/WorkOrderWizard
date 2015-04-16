@@ -60,13 +60,13 @@ namespace WorkOrderWizard.Models
         public virtual int? DaysOpen { //the int is made nullable so that it can be excluded from the pivot table calculation when invalid data is encountered
             get
             {
-                if (STATUS != null && STATUS == 'C')
-                {
+                if (STATUS != null && STATUS == 'C') //all Work Orders that go through the 'Close' process get thier status updated to 'Completed' regardless of what thier original status was
+                {                                       //I left this here in case any corrupt data was encountered.
                     if (REQUESTDATE == null)
                         return (int?)null;
                     if (CLOSEDATE == SharedVariables.MINDATE)
                         return (int?)null;
-
+                    
                     var dtmRequestDate = REQUESTDATE ?? SharedVariables.MINDATE; //uses the null-coalescing operator to get the nullable REQUESTDATE to a DateTime object
                     if (dtmRequestDate == SharedVariables.MINDATE)
                         return (int?)null;

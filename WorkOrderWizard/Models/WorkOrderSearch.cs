@@ -26,7 +26,8 @@ namespace WorkOrderWizard.Models
         public DateTime REQUESTDATEGT { get; set; }
         public DateTime REQUESTDATELT { get; set; }
         public string[] STATUSES { get; set; }
-
+        public DateTime COMPLETIONDATEGT { get; set; }
+        public DateTime COMPLETIONDATELT { get; set; }
 
         //Searchable WOEQLIST properties...
         public string[] EQNUMS { get; set; }
