@@ -48,6 +48,13 @@ $(document).ready(function () {
         loadTheme: "dot-luv"
     });
 
+    $("#SearchButton")
+      .button()
+      .click(function (event) {
+          oTable.draw();
+      });
+
+
     //$("input[type=submit], a, button")
     $("#WOButton")
       .button()
@@ -348,70 +355,70 @@ $(document).ready(function () {
             sRowSelect: "os", //enables the selection of rows //"multi" enables the selection of multiple rows
             sRowSelector: 'td:first-child', //sets the first column of the row as the one to select the row
             "aButtons": [
-                {
-                    "sExtends": "download",
-                    "sButtonText": "Excel Download",
-                    "sUrl": sGetWorkOrdersUrl, //+ "?&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
-                    "sToolTip": "Download an Excel file based on the provided search criteria...",
-                    "fnClick": function (nButton, oConfig) {
-                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                //{
+                //    "sExtends": "download",
+                //    "sButtonText": "Excel Download",
+                //    "sUrl": sGetWorkOrdersUrl, //+ "?&isDownloadReport=True", //+ intMaxRecordCount // "/generate_csv.php"
+                //    "sToolTip": "Download an Excel file based on the provided search criteria...",
+                //    "fnClick": function (nButton, oConfig) {
+                //        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
-                        //aoData.push({ "name": "MaxRecordCount", "value": 0 });
-                        //aoData.push({ "name": "isDownloadReport", "value": true });
+                //        //aoData.push({ "name": "MaxRecordCount", "value": 0 });
+                //        //aoData.push({ "name": "isDownloadReport", "value": true });
 
-                        AppendAdditionalParameters(aoData);
+                //        AppendAdditionalParameters(aoData);
 
-                        /*I tried to use $.ajax to do an HTTP GET for downloading the excel file, but for some reason I couldn't get my response stream to render the excel file as a download
-                        So I had to issue my HTTP GET using the iframe method below for creating the HTTP GET */
-                        var iframe = document.createElement('iframe');
-                        iframe.style.height = "0px";
-                        iframe.style.width = "0px";
-                        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
-                        //oParams.push({ "name": "isDownloadReport", "value": true });
-                        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
-                        document.body.appendChild(iframe);
-                        /*$.ajax({  //This is the setting that does the posting of the data...
-                            "dataType": 'json',
-                            "type": "GET",
-                            "url": oConfig.sUrl + "?" + $.param(aoData), //parameterizes the json array oParams (aka aoData) and appends it to the URL...
-                            //"data": aoData
-                            //"success": fnCallback
-                        });*/
-                    },
-                },
-                {
-                    "sExtends": "download",
-                    "sButtonText": "CSV Download",
-                    "sUrl": sGetWorkOrdersUrl,
-                    "sToolTip": "Download a CSV file based on the provided search criteria...",
-                    "fnClick": function (nButton, oConfig) {
-                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                //        /*I tried to use $.ajax to do an HTTP GET for downloading the excel file, but for some reason I couldn't get my response stream to render the excel file as a download
+                //        So I had to issue my HTTP GET using the iframe method below for creating the HTTP GET */
+                //        var iframe = document.createElement('iframe');
+                //        iframe.style.height = "0px";
+                //        iframe.style.width = "0px";
+                //        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
+                //        //oParams.push({ "name": "isDownloadReport", "value": true });
+                //        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
+                //        document.body.appendChild(iframe);
+                //        /*$.ajax({  //This is the setting that does the posting of the data...
+                //            "dataType": 'json',
+                //            "type": "GET",
+                //            "url": oConfig.sUrl + "?" + $.param(aoData), //parameterizes the json array oParams (aka aoData) and appends it to the URL...
+                //            //"data": aoData
+                //            //"success": fnCallback
+                //        });*/
+                //    },
+                //},
+                //{
+                //    "sExtends": "download",
+                //    "sButtonText": "CSV Download",
+                //    "sUrl": sGetWorkOrdersUrl,
+                //    "sToolTip": "Download a CSV file based on the provided search criteria...",
+                //    "fnClick": function (nButton, oConfig) {
+                //        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
-                        AppendAdditionalParameters(aoData);
+                //        AppendAdditionalParameters(aoData);
 
-                        var iframe = document.createElement('iframe');
-                        iframe.style.height = "0px";
-                        iframe.style.width = "0px";
-                        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=CSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
-                        document.body.appendChild(iframe);
-                    }
-                },
-                {
-                    "sExtends": "download",
-                    "sButtonText": "Submit Search",
-                    "sUrl": sGetWorkOrdersUrl,
-                    "sToolTip": "Refreshes the below table based on the provided search criteria...",
-                    "fnClick": function (nButton, oConfig) {
-                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                //        var iframe = document.createElement('iframe');
+                //        iframe.style.height = "0px";
+                //        iframe.style.width = "0px";
+                //        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=CSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
+                //        document.body.appendChild(iframe);
+                //    }
+                //},
+                //{
+                //    "sExtends": "download",
+                //    "sButtonText": "Submit Search",
+                //    "sUrl": sGetWorkOrdersUrl,
+                //    "sToolTip": "Refreshes the below table based on the provided search criteria...",
+                //    "fnClick": function (nButton, oConfig) {
+                //        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
-                        AppendAdditionalParameters(aoData);
+                //        AppendAdditionalParameters(aoData);
 
-                        var iframe = document.createElement('iframe');
-                        iframe.style.height = "0px";
-                        iframe.style.width = "0px";
-                        oTable.draw();
-                    },
-                },
+                //        var iframe = document.createElement('iframe');
+                //        iframe.style.height = "0px";
+                //        iframe.style.width = "0px";
+                //        oTable.draw();
+                //    },
+                //},
             ]
         },
         //"sScrollX": "100%",

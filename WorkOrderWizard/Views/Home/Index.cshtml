@@ -1,14 +1,13 @@
 ﻿@{
     ViewBag.Title = "Work Orders";
 }
-
-<br />
-<br>
-<div>
-    <div id="PersonalSwitcher" ></div>
+<div class="clear-fix:after">
+    <input id="WOButton" type="submit" value="Create Work Order">
+</div>
+<div class="float-left">
+    <input id="SearchButton" type="submit" value="Submit Search">
 </div>
 
-<br>
 
 <table id="objItems">
     <thead>
@@ -85,6 +84,10 @@
     <tbody></tbody>
 </table>
 
+<div>
+    <div id="PersonalSwitcher" ></div>
+</div>
+
 <div id='DescriptionDialogDiv' style="display: none;">
 </div>
 
@@ -101,6 +104,7 @@
         var sGetWorkOrdersUrl = '@Url.Action("GetWorkOrders", "MP2")';
         var sWOTypesURL = '@Url.Action("WorkOrderTypes", "MP2")';
         var sWOEquipmentListURL = '@Url.Action("EquipmentList", "MP2")';
+        var sCreateWOURL = '@Url.Action("CreateWorkOrder", "MP2")';
         var sPrintWorkOrdersUrl = '@Url.Action("GenerateWOReport", "MP2")';
         var sWONotesUpdateUrl = '@Url.Action("UpdateWONote", "MP2")';
         var sSLEmployeeLookupURL = '@Url.Action("GetSLEmployee", "MP2")';

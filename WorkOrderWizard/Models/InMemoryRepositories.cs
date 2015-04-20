@@ -13,14 +13,10 @@ namespace WorkOrderWizard.Models
 {
     public static class InMemoryWorkOrdersRepository
     {
-        //public static WorkOrders AllWorkOrders { get; set; }
-
         public static IList<WO> GetWorkOrders(int MaxRecordCount, out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
         {
-            //MP2_DataBaseSettings db = new MP2_DataBaseSettings();
-
             ReadOnlyCollection<SortedColumn> sortedColumns = DataTablesModel.GetSortedColumns();
-            IQueryable<WO> workorders;
+            IList<WO> workorders;
             DateTime dtmTemp;
             int intTemp;
             string[] objResults;
@@ -94,92 +90,7 @@ namespace WorkOrderWizard.Models
 
             using (var db = new mp250dbDB())
             {
-                if (isDownloadReport)
-                {
-                    workorders = db.WOes
-                        .Join(db.WOEQLISTs,
-                        w => new { w.WONUM, CloseDate = w.CLOSEDATE },
-                        we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
-                        (w, we) => new { w, we })
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.WONUM) || c.w.WONUM.ToUpper().Contains(objWorkOrderSearch.WONUM.ToUpper()))
-                        .Where(c => c.w.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.w.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
-                        .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.w.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
-                        .Where(c => c.w.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
-                        .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
-                        .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                        .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
-                        //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
-                        .Select(c => c.w)
-                        .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction)
-                        .Select(g => new WO
-                        {
-                            WONUM = g.WONUM,
-                            CLOSEDATE = g.CLOSEDATE,
-                            ORIGINATOR = g.ORIGINATOR,
-                            PRIORITY = g.PRIORITY,
-                            REQUESTDATE = g.REQUESTDATE,
-                            REQUESTTIME = g.REQUESTTIME,
-                            TASKDESC = g.TASKDESC,
-                            NOTES = g.NOTES,
-                            WOTYPE = g.WOTYPE,
-                            STATUS = g.STATUS,
-                            COMPLETIONDATE = g.COMPLETIONDATE,
-                            COMPLETIONTIME = g.COMPLETIONTIME
-                        })
-                        .Distinct();
-                }
-                else
-                {
-
-                    workorders = db.WOes
-                        .Join(db.WOEQLISTs,
-                        w => new { w.WONUM, CloseDate = w.CLOSEDATE },
-                        we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
-                        (w, we) => new { w, we })
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.WONUM) || c.w.WONUM.ToUpper().Contains(objWorkOrderSearch.WONUM.ToUpper()))
-                        .Where(c => c.w.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.w.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
-                        .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.w.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
-                        .Where(c => c.w.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
-                        .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
-                        .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                        .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
-                        //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
-                        .Select(c => c.w)
-                        .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction)
-                        .Select(g => new WO
-                        {
-                            WONUM = g.WONUM,
-                            CLOSEDATE = g.CLOSEDATE,
-                            ORIGINATOR = g.ORIGINATOR,
-                            PRIORITY = g.PRIORITY,
-                            REQUESTDATE = g.REQUESTDATE,
-                            REQUESTTIME = g.REQUESTTIME,
-                            TASKDESC = g.TASKDESC,
-                            NOTES = g.NOTES,
-                            WOTYPE = g.WOTYPE,
-                            STATUS = g.STATUS,
-                            COMPLETIONDATE = g.COMPLETIONDATE,
-                            COMPLETIONTIME = g.COMPLETIONTIME
-                        })
-                        .Distinct()
-                        .Take(MaxRecordCount);
-                }
-
-                //needed this to get the proper pagination values. by adding it here, i was hoping to optomize performance and still leverage deferred execution with the above queries
-                // and the take values below...
-                searchRecordCount = 0; db.WOes
+                workorders = db.WOes
                         .Join(db.WOEQLISTs,
                         w => new { w.WONUM, CloseDate = w.CLOSEDATE },
                         we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
@@ -216,18 +127,17 @@ namespace WorkOrderWizard.Models
                             COMPLETIONTIME = g.COMPLETIONTIME
                         })
                         .Distinct()
-                        .Count();
-            }
-            
+                        .ToList(); //my pagination didn't work properly without this; some problem with .skip call directly to the database...
 
-            if (isDownloadReport)
-                return workorders.ToList();
-            else
-                if (DataTablesModel.iDisplayLength == -1)
-                    return workorders.Skip(DataTablesModel.iDisplayStart).ToList();
+                //needed this to get the proper pagination values. by adding it here, i was hoping to optomize performance and still leverage deferred execution with the above queries
+                // and the take values below...
+                searchRecordCount = workorders.Count;
+
+                if (isDownloadReport)
+                    return workorders;
                 else
                     return workorders.Skip(DataTablesModel.iDisplayStart).Take(DataTablesModel.iDisplayLength).ToList();
-
+            }
         }
     }
 }

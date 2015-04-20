@@ -131,3 +131,27 @@ div.DTTT_container {
     clear: left;
     padding-top: 10px;
 }
+
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear-fix:after {
+    content: ".";
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.center {
+     margin-left: auto;
+     margin-right: auto;
+     width: 90%;
+     /*background-color: #b0e0e6;*/
+ }

@@ -52,8 +52,7 @@ namespace WorkOrderWizard
 
             bundles.Add(new StyleBundle("~/Content/reset").Include(
                 "~/Content/reset.css",
-                "~/Content/html5-reset.css",
-                "~/Content/site.css"));
+                "~/Content/html5-reset.css"));
 
             bundles.Add(new StyleBundle("~/Content/impromptu").Include(
                 "~/Content/jquery-impromptu.css"));
