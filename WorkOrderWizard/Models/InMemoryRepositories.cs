@@ -110,7 +110,7 @@ namespace WorkOrderWizard.Models
                         .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
                     //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
                         .Select(c => c.w)
-                        .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction)
+                        .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
                         .Select(g => new WO
                         {
                             WONUM = g.WONUM,
