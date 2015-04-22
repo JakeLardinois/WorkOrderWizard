@@ -13,6 +13,7 @@ namespace WorkOrderWizard.Models
     {
         private StringBuilder objStrBldrSQL = new StringBuilder();
         private List<WOEQLIST> mWOEQLIST { get; set; }
+        public List<WOEQLIST> WOEQToAdd { get; set; }
 
         public WO()
             :base()
@@ -70,12 +71,12 @@ namespace WorkOrderWizard.Models
                     if (dtmRequestDate == SharedVariables.MINDATE)
                         return (int?)null;
 
-                    dtmCompletionDate = REQUESTDATE ?? SharedVariables.MINDATE; //uses the null-coalescing operator to get the nullable COMPLETIONDATE to a DateTime object
+                    dtmCompletionDate = COMPLETIONDATE ?? SharedVariables.MINDATE; //uses the null-coalescing operator to get the nullable COMPLETIONDATE to a DateTime object
                     if (dtmCompletionDate == SharedVariables.MINDATE)
                         return (int?)null;
 
                     intDaysOpen = (dtmCompletionDate - dtmRequestDate).Days;
-                    return intDaysOpen > 0 ? intDaysOpen : (int?)null;   //if the CLOSEDATE occurred before the REQUESTDATE (resulting in a negative) then the data is invalid and so a null is returned
+                    return intDaysOpen >= 0 ? intDaysOpen : (int?)null;   //if the CLOSEDATE occurred before the REQUESTDATE (resulting in a negative) then the data is invalid and so a null is returned
                 }
                 else if (STATUS != null && (STATUS == 'O' || STATUS == 'R'))
                 {
@@ -140,12 +141,12 @@ namespace WorkOrderWizard.Models
             ORIGINATOR = "A" + EmployeeInfo.Split(':')[0]; //MP2 'Short Text' fields only allow 25 characters...
             WOTYPE = WOType[0];
 
-            WOEQLIST = new List<WOEQLIST>();
+            WOEQToAdd = new List<WOEQLIST>();
             if (WOEquipment != null)
                 foreach (var strEquipment in WOEquipment)
                     using (var db = new mp250dbDB())
                     {
-                        WOEQLIST.Add(db.EQUIPs
+                        WOEQToAdd.Add(db.EQUIPs
                         .Where(e => e.EQNUM.Equals(strEquipment))
                         .Select(e => new WOEQLIST
                         {
@@ -201,7 +202,7 @@ namespace WorkOrderWizard.Models
 
             QueryStatuses.Add(this.Insert());
             if (QueryStatuses[0].RecordsAffected > 0)
-                foreach (var objWOEquip in WOEQLIST)
+                foreach (var objWOEquip in WOEQToAdd)
                     QueryStatuses.Add(objWOEquip.Insert());
 
             return QueryStatuses;

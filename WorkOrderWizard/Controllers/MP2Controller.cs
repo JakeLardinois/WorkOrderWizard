@@ -144,13 +144,27 @@ namespace WorkOrderWizard.Controllers
 
             switch (Format)
             {
-                case "CSV":
+                case "WOEquipCSV":
+                    RenderWorkOrderEquipCSVReport();
+                    break;
+                case "WOCSV":
                     RenderWorkOrderCSVReport();
                     break;
                 default:
                     RenderWorkOrderReport();
                     break;
             }
+        }
+
+        private void RenderWorkOrderEquipCSVReport()
+        {
+            var objWorkOrderCSVList = new WorkOrderEquipCSVList(WorkOrderCollection);
+
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("content-disposition", "attachment; filename=Report.csv");
+            Response.Write(objWorkOrderCSVList.ToCSVString());
+            Response.End();
         }
 
         private void RenderWorkOrderCSVReport()
