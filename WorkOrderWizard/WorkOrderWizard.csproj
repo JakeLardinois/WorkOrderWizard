@@ -158,7 +158,7 @@
     <Compile Include="Models\InMemoryRepositories.cs" />
     <Compile Include="Models\JQueryDataTablesModel.cs" />
     <Compile Include="Models\JQueryDataTablesModelBinder.cs" />
-    <Compile Include="Models\mp250db1.generated.cs">
+    <Compile Include="mp250db1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>mp250db.tt</DependentUpon>
@@ -238,7 +238,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="LinqToDB.Templates\CopyMe.Access.tt.txt" />
-    <None Include="Models\mp250db.tt">
+    <None Include="mp250db.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>mp250db1.generated.cs</LastGenOutput>
     </None>

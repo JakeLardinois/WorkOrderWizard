@@ -403,23 +403,23 @@ $(document).ready(function () {
                 //        document.body.appendChild(iframe);
                 //    }
                 //},
-                //{
-                //    "sExtends": "download",
-                //    "sButtonText": "WO CSV Download",
-                //    "sUrl": sGetWorkOrdersUrl,
-                //    "sToolTip": "Download a CSV file based on the provided search criteria...",
-                //    "fnClick": function (nButton, oConfig) {
-                //        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+                {
+                    "sExtends": "download",
+                    "sButtonText": "WO CSV Download",
+                    "sUrl": sGetWorkOrdersUrl,
+                    "sToolTip": "Download a CSV file based on the provided search criteria...",
+                    "fnClick": function (nButton, oConfig) {
+                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
-                //        AppendAdditionalParameters(aoData);
+                        AppendAdditionalParameters(aoData);
 
-                //        var iframe = document.createElement('iframe');
-                //        iframe.style.height = "0px";
-                //        iframe.style.width = "0px";
-                //        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=WOCSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
-                //        document.body.appendChild(iframe);
-                //    }
-                //},
+                        var iframe = document.createElement('iframe');
+                        iframe.style.height = "0px";
+                        iframe.style.width = "0px";
+                        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=WOCSV"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
+                        document.body.appendChild(iframe);
+                    }
+                }
                 //{
                 //    "sExtends": "download",
                 //    "sButtonText": "Submit Search",

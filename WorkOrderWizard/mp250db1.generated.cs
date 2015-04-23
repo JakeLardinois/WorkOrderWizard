@@ -14,7 +14,7 @@ namespace WorkOrderWizard.Models
 {
 	/// <summary>
 	/// Database       : mp250db
-	/// Data Source    : C:\Users\JakeL\Desktop\OffSiteCS\WorkOrderWizard\WorkOrderWizard\App_Data\mp250db.mdb
+	/// Data Source    : \\wiretechfab.com\companyfolders\MP2ACC2000\Data\TUTDATA\mp250db.mdb
 	/// Server Version : 04.00.0000
 	/// </summary>
 	public partial class mp250dbDB : LinqToDB.Data.DataConnection
