@@ -27,7 +27,9 @@ namespace WorkOrderWizard.Controllers
 
             using (var db = new mp250dbDB())
             {
-                objWOTypeList = db.WOTYPEs.ToList();
+                objWOTypeList = db.WOTYPEs
+                    .Where(w => !w.DESCRIPTION.Contains("do not use!"))
+                    .ToList();
             }
 
             var result = new JsonResult();
@@ -144,14 +146,20 @@ namespace WorkOrderWizard.Controllers
 
             switch (Format)
             {
-                case "WOEquipCSV":
-                    RenderWorkOrderEquipCSVReport();
+                case "WOExcel":
+                    RenderWorkOrdeExcelReport();
+                    break;
+                case "WOEquipExcel":
+                    RenderWorkOrderEquipExcelReport();
                     break;
                 case "WOCSV":
                     RenderWorkOrderCSVReport();
                     break;
+                case "WOEquipCSV":
+                    RenderWorkOrderEquipCSVReport();
+                    break;
                 default:
-                    RenderWorkOrderReport();
+                    RenderWorkOrderCSVReport();
                     break;
             }
         }
@@ -162,7 +170,7 @@ namespace WorkOrderWizard.Controllers
 
             Response.Clear();
             Response.ContentType = "text/csv";
-            Response.AddHeader("content-disposition", "attachment; filename=Report.csv");
+            Response.AddHeader("content-disposition", "attachment; filename=WorkOrderEquip" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + ".csv");
             Response.Write(objWorkOrderCSVList.ToCSVString());
             Response.End();
         }
@@ -173,12 +181,12 @@ namespace WorkOrderWizard.Controllers
 
             Response.Clear();
             Response.ContentType = "text/csv";
-            Response.AddHeader("content-disposition", "attachment; filename=Report.csv");
+            Response.AddHeader("content-disposition", "attachment; filename=WorkOrders" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + ".csv");
             Response.Write(objWorkOrderCSVList.ToCSVString());
             Response.End();
         }
 
-        private void RenderWorkOrderReport()
+        private void RenderWorkOrdeExcelReport()
         {
             string strReportType = "Excel";
             LocalReport objLocalReport;
@@ -191,6 +199,57 @@ namespace WorkOrderWizard.Controllers
             string[] streams;
 
             objLocalReport = new LocalReport { ReportPath = Server.MapPath(Settings.ReportDirectory + "WorkOrders.rdlc") };
+
+            //Give the reportdatasource a name so that we can reference it in our report designer
+            WorkOrderDataSource = new ReportDataSource("WorkOrders", WorkOrderCollection);
+
+            objLocalReport.DataSources.Add(WorkOrderDataSource);
+            objLocalReport.Refresh();
+
+            //The DeviceInfo settings should be changed based on the reportType
+            //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
+            deviceInfo = string.Format(
+                        "<DeviceInfo>" +
+                        "<OmitDocumentMap>True</OmitDocumentMap>" +
+                        "<OmitFormulas>True</OmitFormulas>" +
+                        "<SimplePageHeaders>True</SimplePageHeaders>" +
+                        "</DeviceInfo>", strReportType);
+
+            //Render the report
+            var renderedBytes = objLocalReport.Render(
+                strReportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
+
+            //Clear the response stream and write the bytes to the outputstream
+            //Set content-disposition to "attachment" so that user is prompted to take an action
+            //on the file (open or save)
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.ClearContent();
+            Response.ContentType = mimeType;
+            Response.AddHeader("content-disposition", "attachment; filename=WorkOrders" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "." + fileNameExtension);
+            Response.BinaryWrite(renderedBytes);
+            Response.End();
+        }
+
+        private void RenderWorkOrderEquipExcelReport()
+        {
+            string strReportType = "Excel";
+            LocalReport objLocalReport;
+            ReportDataSource WorkOrderDataSource;
+            string mimeType;
+            string encoding;
+            string fileNameExtension;
+            string deviceInfo = "";
+            Warning[] warnings;
+            string[] streams;
+
+            objLocalReport = new LocalReport { ReportPath = Server.MapPath(Settings.ReportDirectory + "WorkOrderEquipment.rdlc") };
 
             objLocalReport.SubreportProcessing += new SubreportProcessingEventHandler(MySubreportEventHandler);
 
@@ -226,7 +285,7 @@ namespace WorkOrderWizard.Controllers
             Response.ClearHeaders();
             Response.ClearContent();
             Response.ContentType = mimeType;
-            Response.AddHeader("content-disposition", "attachment; filename=WorkOrders" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "." + fileNameExtension);
+            Response.AddHeader("content-disposition", "attachment; filename=WorkOrderEquip" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "." + fileNameExtension);
             Response.BinaryWrite(renderedBytes);
             Response.End();
         }

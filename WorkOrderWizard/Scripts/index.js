@@ -375,7 +375,7 @@ $(document).ready(function () {
                 //        iframe.style.width = "0px";
                 //        //oParams.push({ "name": "MaxRecordCount", "value": 0 }); //maxrecordcount isn't used on download report...
                 //        //oParams.push({ "name": "isDownloadReport", "value": true });
-                //        iframe.src = oConfig.sUrl + "?" + $.param(aoData); //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
+                //        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=WOEquipExcel"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
                 //        document.body.appendChild(iframe);
                 //        /*$.ajax({  //This is the setting that does the posting of the data...
                 //            "dataType": 'json',
@@ -405,9 +405,26 @@ $(document).ready(function () {
                 //},
                 {
                     "sExtends": "download",
-                    "sButtonText": "WO CSV Download",
+                    "sButtonText": "Excel Download",
                     "sUrl": sGetWorkOrdersUrl,
                     "sToolTip": "Download a CSV file based on the provided search criteria...",
+                    "fnClick": function (nButton, oConfig) {
+                        var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
+
+                        AppendAdditionalParameters(aoData);
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.height = "0px";
+                        iframe.style.width = "0px";
+                        iframe.src = oConfig.sUrl + "?" + $.param(aoData) + "&Format=WOExcel"; //parameterizes the json array aoData and appends it to the URL; HTTP GET standard only allows parameters to be sent via the URL
+                        document.body.appendChild(iframe);
+                    }
+                },
+                {
+                    "sExtends": "download",
+                    "sButtonText": "CSV Download",
+                    "sUrl": sGetWorkOrdersUrl,
+                    "sToolTip": "Download an Excel file based on the provided search criteria...",
                     "fnClick": function (nButton, oConfig) {
                         var aoData = this.s.dt.oApi._fnAjaxParameters(this.s.dt);
 
