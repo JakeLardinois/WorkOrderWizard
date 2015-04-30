@@ -15,6 +15,9 @@ namespace WorkOrderWizard.Models
         public WorkOrderCSVList(IList<WO> WorkOrderCollection)
             : base()
         {
+            DateTime dtmTemp;
+
+
             this.AddRange(WorkOrderCollection
                 .Select(w => new WorkOrderCSV
                 {
@@ -64,6 +67,64 @@ namespace WorkOrderWizard.Models
             }
         }
     }
+
+    public class WorkOrderCSV
+    {
+        private string mTASKDESC { get; set; }
+        private string mNOTES { get; set; }
+        private string mWOEquipmentNotes { get; set; }
+
+
+        #region WO_Fields
+        [CsvColumn(Name = "WONUM", FieldIndex = 1)]
+        public string WONUM { get; set; }
+
+        [CsvColumn(Name = "CLOSEDATE", FieldIndex = 2, OutputFormat = "MM/dd/yyyy")]
+        public DateTime CLOSEDATE { get; set; }
+
+        [CsvColumn(Name = "STATUS", FieldIndex = 3)]
+        public char? STATUS { get; set; }
+
+        [CsvColumn(Name = "PRIORITY", FieldIndex = 4)]
+        public double? PRIORITY { get; set; }
+
+        [CsvColumn(Name = "WOTYPE", FieldIndex = 5)]
+        public string WOTYPE { get; set; }
+
+        [CsvColumn(Name = "ORIGINATOR", FieldIndex = 6)]
+        public string ORIGINATOR { get; set; }
+
+        [CsvColumn(Name = "REQUESTDATE", FieldIndex = 7)]
+        public DateTime? REQUESTDATE { get; set; }
+
+        [CsvColumn(Name = "REQUESTTIME", FieldIndex = 8)]
+        public DateTime? REQUESTTIME { get; set; }
+
+        [CsvColumn(Name = "COMPLETIONDATE", FieldIndex = 9)]
+        public DateTime? COMPLETIONDATE { get; set; }
+
+        [CsvColumn(Name = "COMPLETIONTIME", FieldIndex = 10)]
+        public DateTime? COMPLETIONTIME { get; set; }
+
+        [CsvColumn(Name = "TASKDESC", FieldIndex = 11)]
+        public string TASKDESC
+        {
+            get { return string.IsNullOrEmpty(mTASKDESC) ? string.Empty : mTASKDESC.RemoveTabAndNewLine(); }
+            set { mTASKDESC = value; }
+        }
+
+        [CsvColumn(Name = "WONotes", FieldIndex = 12)]
+        public string NOTES
+        {
+            get { return string.IsNullOrEmpty(mNOTES) ? string.Empty : mNOTES.RemoveTabAndNewLine(); }
+            set { mNOTES = value; }
+        }
+        #endregion
+
+        [CsvColumn(Name = "DaysOpen", FieldIndex = 13)]
+        public int? DaysOpen { get; set; }
+    }
+
 
     public class WorkOrderEquipCSVList : List<WorkOrderEquipmentCSV>
     {
@@ -127,64 +188,6 @@ namespace WorkOrderWizard.Models
                 }
             }
         }
-    }
-
-
-    public class WorkOrderCSV
-    {
-        private string mTASKDESC { get; set; }
-        private string mNOTES { get; set; }
-        private string mWOEquipmentNotes { get; set; }
-
-
-        #region WO_Fields
-        [CsvColumn(Name = "WONUM", FieldIndex = 1)]
-        public string WONUM { get; set; }
-
-        [CsvColumn(Name = "CLOSEDATE", FieldIndex = 2, OutputFormat = "MM/dd/yyyy")]
-        public DateTime CLOSEDATE { get; set; }
-
-        [CsvColumn(Name = "STATUS", FieldIndex = 3)]
-        public char? STATUS { get; set; }
-
-        [CsvColumn(Name = "PRIORITY", FieldIndex = 4)]
-        public double? PRIORITY { get; set; }
-
-        [CsvColumn(Name = "WOTYPE", FieldIndex = 5)]
-        public string WOTYPE { get; set; }
-
-        [CsvColumn(Name = "ORIGINATOR", FieldIndex = 6)]
-        public string ORIGINATOR { get; set; }
-
-        [CsvColumn(Name = "REQUESTDATE", FieldIndex = 7, OutputFormat = "MM/dd/yyyy")]
-        public DateTime? REQUESTDATE { get; set; }
-
-        [CsvColumn(Name = "REQUESTTIME", FieldIndex = 8, OutputFormat = "h:MM tt")]
-        public DateTime? REQUESTTIME { get; set; }
-
-        [CsvColumn(Name = "COMPLETIONDATE", FieldIndex = 9, OutputFormat = "MM/dd/yyyy")]
-        public DateTime? COMPLETIONDATE { get; set; }
-
-        [CsvColumn(Name = "COMPLETIONTIME", FieldIndex = 10, OutputFormat = "h:MM tt")]
-        public DateTime? COMPLETIONTIME { get; set; }
-
-        [CsvColumn(Name = "TASKDESC", FieldIndex = 11)]
-        public string TASKDESC
-        {
-            get { return string.IsNullOrEmpty(mTASKDESC) ? string.Empty : mTASKDESC.RemoveTabAndNewLine(); }
-            set { mTASKDESC = value; }
-        }
-
-        [CsvColumn(Name = "WONotes", FieldIndex = 12)]
-        public string NOTES
-        {
-            get { return string.IsNullOrEmpty(mNOTES) ? string.Empty : mNOTES.RemoveTabAndNewLine(); }
-            set { mNOTES = value; }
-        }
-        #endregion
-
-        [CsvColumn(Name = "DaysOpen", FieldIndex = 21)]
-        public int? DaysOpen { get; set; }
     }
 
     public class WorkOrderEquipmentCSV
