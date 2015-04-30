@@ -37,7 +37,8 @@ namespace WorkOrderWizard
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
                         "~/Scripts/DataTables-1.10.2/media/js/jquery.dataTables.min.js",
                         "~/Scripts/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.min.js",
-                        "~/Scripts/DataTables-1.10.2/extensions/ColReorder/js/dataTables.colReorder.min.js"));
+                        "~/Scripts/DataTables-1.10.2/extensions/ColReorder/js/dataTables.colReorder.min.js",
+                        "~/Scripts/DataTables.Pipeline.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datetimeformatter").Include(
                         "~/Scripts/DateTimeFormatter.js"));

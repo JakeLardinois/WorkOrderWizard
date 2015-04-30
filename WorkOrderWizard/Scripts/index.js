@@ -460,7 +460,7 @@ $(document).ready(function () {
             "iFixedColumns": 3 //specifies that the first n columns are not reorderable...
         },
         "sPaginationType": "full_numbers",
-        "sAjaxSource": sGetWorkOrdersUrl + '?&MaxRecordCount=' + intMaxRecordCount,// document.URL,
+        "sAjaxSource": sGetWorkOrdersUrl,// document.URL,
         "sServerMethod": "POST",
         "fnServerData": function (sSource, aoData, fnCallback, oSettings) {
             window.clearTimeout(oTimerId); //clear the timer if it still exists
@@ -568,8 +568,8 @@ $(document).ready(function () {
                     },
                     {
                         "mDataProp": null, //Note that I had a problem with this column being first because when the datatable loads, it automatically sorts based on the first column; since this column had a null value
-                        "sWidth": 60,
-                        "sClass": "eqipnotes center", //applies the control class to the cell and the center class(which center aligns the image)
+                        //"sWidth": 10,
+                        "sClass": "eqipnotes center", //applies the eqipnotes class to the cell and the center class(which center aligns the image)
                         "bSortable": false,
                         "bSearchable": false,
                         "sDefaultContent": '<img src="' + sOpenImageUrl + '">'
@@ -638,12 +638,20 @@ $(document).ready(function () {
             '<tbody>' +
                 '<tr>' +
                     '<td>' +
-                        '<label for="TASKDESC"><b>Description: </b></label>' +
+                        '<label for="TASKDESC"><strong>Description: </strong></label>' +
                         '<label id="TASKDESC">' + oObj.TASKDESC + '</label>' +
                     '</td>' +
                 '</tr>' +
                 '<tr>' +
                     '<td>' +
+                        '<label for="DELAYDESC"><strong>Delay Reason: </strong></label>' +
+                        '<label id="DELAYDESC" style="color:red;">' + oObj.DELAYDESC + '</label>' +
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        '<br>' +
+                        '<label for="WONoteEditorDiv"><strong>Notes: </strong></label>' +
                         '<div id="WONoteEditorDiv" class="EditWONotes">' +
                             oObj.HTMLWONotes +
                         '</div>' +

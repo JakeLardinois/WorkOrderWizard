@@ -13,7 +13,7 @@ namespace WorkOrderWizard.Models
 {
     public static class InMemoryWorkOrdersRepository
     {
-        public static IList<WO> GetWorkOrders(int MaxRecordCount, out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
+        public static IList<WO> GetWorkOrders(out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
         {
             ReadOnlyCollection<SortedColumn> sortedColumns = DataTablesModel.GetSortedColumns();
             IList<WO> workorders;
@@ -120,6 +120,7 @@ namespace WorkOrderWizard.Models
                             REQUESTDATE = g.REQUESTDATE,
                             REQUESTTIME = g.REQUESTTIME,
                             TASKDESC = g.TASKDESC,
+                            DELAYDESC = g.DELAYDESC,
                             NOTES = g.NOTES,
                             WOTYPE = g.WOTYPE,
                             STATUS = g.STATUS,

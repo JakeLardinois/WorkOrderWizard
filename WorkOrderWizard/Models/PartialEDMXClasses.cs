@@ -11,7 +11,7 @@ namespace WorkOrderWizard.Models
 {
     public partial class WO : IEquatable<WO>
     {
-        private StringBuilder objStrBldrSQL = new StringBuilder();
+        private StringBuilder objStrBldr = new StringBuilder();
         private List<WOEQLIST> mWOEQLIST { get; set; }
         public List<WOEQLIST> WOEQToAdd { get; set; }
 
@@ -22,7 +22,6 @@ namespace WorkOrderWizard.Models
             REQUESTTIME = new DateTime(SharedVariables.MINDATE.Year, SharedVariables.MINDATE.Month, SharedVariables.MINDATE.Day, 
                 DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
             REQUESTDATE = DateTime.Now.Date;
-
 
         }
 
@@ -44,7 +43,21 @@ namespace WorkOrderWizard.Models
                 mWOEQLIST = value;
             }
         }
-       
+
+        public virtual string Equipment
+        {
+            get
+            {
+                objStrBldr.Clear();
+                if (WOEQLIST != null)
+                    foreach (var objEquipment in WOEQLIST)
+                        objStrBldr.Append(objEquipment.EQNUM + ", ");
+
+                return objStrBldr.Length > 2 ? objStrBldr.ToString().Substring(0, objStrBldr.Length - 2) : string.Empty;
+
+            }
+        }
+
         public virtual string HTMLWONotes
         {
             get
@@ -103,13 +116,13 @@ namespace WorkOrderWizard.Models
         {
             var strWorkOrderPrefix = Settings.WorkOrderPrefix;
             MP2_DataBaseSettings objDb = new MP2_DataBaseSettings();
-            objStrBldrSQL.Clear();
-            objStrBldrSQL.Append(QueryDefinitions.GetQuery("SelectCurrentWONum", new string[] { strWorkOrderPrefix }));
+            objStrBldr.Clear();
+            objStrBldr.Append(QueryDefinitions.GetQuery("SelectCurrentWONum", new string[] { strWorkOrderPrefix }));
             int intTemp, intWorkOrderNum;
 
             using (objDb.OleDBConnection)
             {
-                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldrSQL.ToString(), objDb.OleDBConnection);
+                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldr.ToString(), objDb.OleDBConnection);
                 objDb.OleDBConnection.Open();
                 OleDbDataReader objOleDbDataReader = objOleDbCommand.ExecuteReader();
 
@@ -123,13 +136,13 @@ namespace WorkOrderWizard.Models
                 else
                     intWorkOrderNum = 0;
 
-                objStrBldrSQL.Clear();
-                objStrBldrSQL.Append((strWorkOrderPrefix + intWorkOrderNum.ToString().PadLeft(10 - strWorkOrderPrefix.Length, '0')));
+                objStrBldr.Clear();
+                objStrBldr.Append((strWorkOrderPrefix + intWorkOrderNum.ToString().PadLeft(10 - strWorkOrderPrefix.Length, '0')));
 
                 objDb.OleDBConnection.Close();
             }
 
-            return objStrBldrSQL.ToString().Substring(objStrBldrSQL.ToString().Length - 10); //MP2 WONUM field can only be 10 characters long...
+            return objStrBldr.ToString().Substring(objStrBldr.ToString().Length - 10); //MP2 WONUM field can only be 10 characters long...
         }
 
         public void PopulateFromPostVariables()
@@ -162,7 +175,6 @@ namespace WorkOrderWizard.Models
                         .DefaultIfEmpty(new WOEQLIST { EQNUM = "NULL" })
                         .SingleOrDefault());
                     }
-
         }
 
         public QueryStatus Insert()
@@ -174,11 +186,11 @@ namespace WorkOrderWizard.Models
             try
             {
                 objDb = new MP2_DataBaseSettings();
-                objStrBldrSQL.Clear();
-                objStrBldrSQL.Append(QueryDefinitions.GetQuery("InsertIntoWO", new string[] { WONUM, CLOSEDATE.ToString("d"), TASKDESC.EscapeSingleQuotes(), NOTES.EscapeSingleQuotes(),
+                objStrBldr.Clear();
+                objStrBldr.Append(QueryDefinitions.GetQuery("InsertIntoWO", new string[] { WONUM, CLOSEDATE.ToString("d"), TASKDESC.EscapeSingleQuotes(), NOTES.EscapeSingleQuotes(),
                 WOTYPE, ORIGINATOR, PRIORITY.ToString(), string.Format("{0:G}", REQUESTTIME), string.Format("{0:d}", REQUESTDATE)}));
 
-                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldrSQL.ToString(), objDb.OleDBConnection);
+                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldr.ToString(), objDb.OleDBConnection);
                 using (objDb.OleDBConnection)
                 {
                     objDb.OleDBConnection.Open();
@@ -215,12 +227,12 @@ namespace WorkOrderWizard.Models
 
 
             //make sure to replace the single quotes with double single quotes in order to escape them
-            objStrBldrSQL.Clear();
-            objStrBldrSQL.Append(QueryDefinitions.GetQuery("UpdateWONotes", new string[] { NOTES.EscapeSingleQuotes(), WONUM, CLOSEDATE.ToString("d") }));
+            objStrBldr.Clear();
+            objStrBldr.Append(QueryDefinitions.GetQuery("UpdateWONotes", new string[] { NOTES.EscapeSingleQuotes(), WONUM, CLOSEDATE.ToString("d") }));
 
             using (db.OleDBConnection)
             {
-                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldrSQL.ToString(), db.OleDBConnection);
+                OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldr.ToString(), db.OleDBConnection);
                 db.OleDBConnection.Open();
                 try
                 {

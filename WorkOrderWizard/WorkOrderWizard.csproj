@@ -689,6 +689,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="WebForm1.aspx" />
+    <Content Include="Scripts\DataTables.Pipeline.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
