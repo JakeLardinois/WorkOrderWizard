@@ -248,7 +248,6 @@ $(document).ready(function () {
     $("#PRIORITYFilter").append("<option value=\"3\">Priority 3 (Med)</option>");
     $("#PRIORITYFilter").append("<option value=\"4\">Priority 4</option>");
     $("#PRIORITYFilter").append("<option value=\"5\">Priority 5 (Low)</option>");
-    $("#PRIORITYFilter").append("<option value=\"0\">Priority 0 (None)</option>");
     $("#PRIORITYFilter").multiselect({
         multiple: true,
         hide: "explode",

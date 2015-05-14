@@ -9,6 +9,26 @@ namespace WorkOrderWizard.Models
 {
     public static class MyExtensionMethods
     {
+        /*public static double? TryParse(this double? source)
+        {
+            double dblTemp;
+            if (source.HasValue)
+                return double.TryParse(source.ToString(), out dblTemp) ? dblTemp : (double?)null;
+            else
+                return (double?)null;
+        }*/
+
+        public static int ToInt(this double? source)
+        {
+            int intTemp;
+
+
+            if (source.HasValue)
+                return int.TryParse(source.ToString(), out intTemp) ? intTemp : 0;
+            else
+                return 0;
+        }
+
         public static string EscapeSingleQuotes(this string source)
         {
             return source.Replace("\'", @"''");

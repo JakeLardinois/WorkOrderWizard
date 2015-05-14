@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Data.OleDb;
 using System.Text;
 using System.Linq.Dynamic;
+using System.Data.Objects.SqlClient;
 
 
 namespace WorkOrderWizard.Models
@@ -16,7 +17,7 @@ namespace WorkOrderWizard.Models
         public static IList<WO> GetWorkOrders(out int searchRecordCount, JQueryDataTablesModel DataTablesModel, bool isDownloadReport = false)
         {
             ReadOnlyCollection<SortedColumn> sortedColumns = DataTablesModel.GetSortedColumns();
-            IList<WO> workorders;
+            IEnumerable<WO> workorders;
             DateTime dtmTemp;
             int intTemp;
             string[] objResults;
@@ -60,7 +61,7 @@ namespace WorkOrderWizard.Models
                             objWorkOrderSearch.ORIGINATOR = DataTablesModel.sSearch_[intCounter];
                             break;
                         case "PRIORITY":
-                            objWorkOrderSearch.PRIORITY = DataTablesModel.sSearch_[intCounter];
+                            objWorkOrderSearch.PRIORITIES = DataTablesModel.sSearch_[intCounter].Split('|');//results returned from a checklist are delimited by the pipe char   
                             break;
                         case "REQUESTDATE":
                             objResults = DataTablesModel.sSearch_[intCounter].Split('~');//results returned from a daterange are delimited by the tilde char
@@ -87,57 +88,66 @@ namespace WorkOrderWizard.Models
             var WOTYPEList = objWorkOrderSearch.WOTYPES == null ? new[] { strEmptyString } : objWorkOrderSearch.WOTYPES.ToArray<string>();
             var STATUSList = objWorkOrderSearch.STATUSES == null ? new[] { strEmptyString } : objWorkOrderSearch.STATUSES.ToArray<string>();
             var EQNUMList = objWorkOrderSearch.EQNUMS == null ? new[] { strEmptyString } : objWorkOrderSearch.EQNUMS.ToArray<string>();
+            //var PRIORITYList = objWorkOrderSearch.PRIORITIES == null ? new[] { (double?)null } : Array.ConvertAll(objWorkOrderSearch.PRIORITIES.ToArray<string>(), MySharedFunctions.TryParseNullableDouble);
+            var PRIORITYList = objWorkOrderSearch.PRIORITIES == null ? new[] { 0.0 } : Array.ConvertAll(objWorkOrderSearch.PRIORITIES.ToArray<string>(), double.Parse);
 
             using (var db = new mp250dbDB())
             {
                 workorders = db.WOes
-                        .Join(db.WOEQLISTs,
-                        w => new { w.WONUM, CloseDate = w.CLOSEDATE },
-                        we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
-                        (w, we) => new { w, we })
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.WONUM) || c.w.WONUM.ToUpper().Contains(objWorkOrderSearch.WONUM.ToUpper()))
-                        .Where(c => c.w.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.w.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
-                        .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.w.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
-                        .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
-                        .Where(c => c.w.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
-                        .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
-                        .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
-                        .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                        .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
+                    .Join(db.WOEQLISTs,
+                    w => new { w.WONUM, CloseDate = w.CLOSEDATE },
+                    we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
+                    (w, we) => new { w, we })
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.WONUM) || c.w.WONUM.ToUpper().Contains(objWorkOrderSearch.WONUM.ToUpper()))
+                    .Where(c => c.w.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
+                    .Where(c => c.w.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.w.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
+                    .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE))
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.w.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
+                    //.Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
+                    //.Where(c => PRIORITYList.Contains(strEmptyString) || PRIORITYList.Contains(((int)c.w.PRIORITY).ToString()))
+                    .Where(c => c.w.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
+                    .Where(c => c.w.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
+                    .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
+                    .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
+                    .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
+                    .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
                     //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
-                        .Select(c => c.w)
-                        .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
-                        .Select(g => new WO
-                        {
-                            WONUM = g.WONUM,
-                            CLOSEDATE = g.CLOSEDATE,
-                            ORIGINATOR = g.ORIGINATOR,
-                            PRIORITY = g.PRIORITY,
-                            REQUESTDATE = g.REQUESTDATE,
-                            REQUESTTIME = g.REQUESTTIME,
-                            TASKDESC = g.TASKDESC,
-                            DELAYDESC = g.DELAYDESC,
-                            NOTES = g.NOTES,
-                            WOTYPE = g.WOTYPE,
-                            STATUS = g.STATUS,
-                            COMPLETIONDATE = g.COMPLETIONDATE,
-                            COMPLETIONTIME = g.COMPLETIONTIME
-                        })
-                        .Distinct()
-                        .ToList(); //my pagination didn't work properly without this; some problem with .skip call directly to the database...
-
+                    .Select(c => c.w)
+                    .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
+                    .Select(g => new WO
+                    {
+                        WONUM = g.WONUM,
+                        CLOSEDATE = g.CLOSEDATE,
+                        ORIGINATOR = g.ORIGINATOR,
+                        PRIORITY = g.PRIORITY,
+                        REQUESTDATE = g.REQUESTDATE,
+                        REQUESTTIME = g.REQUESTTIME,
+                        TASKDESC = g.TASKDESC,
+                        DELAYDESC = g.DELAYDESC,
+                        NOTES = g.NOTES,
+                        WOTYPE = g.WOTYPE,
+                        STATUS = g.STATUS,
+                        COMPLETIONDATE = g.COMPLETIONDATE,
+                        COMPLETIONTIME = g.COMPLETIONTIME
+                    })
+                    .Distinct()
+                    //.Where(c => Math.Truncate(c.PRIORITY.GetValueOrDefault()) == 1)
+                    .Where(c => PRIORITYList.Contains(0) || PRIORITYList.Contains(Math.Truncate(c.PRIORITY.GetValueOrDefault())));
+                    //.ToList()//my pagination didn't work properly without this; some problem with .skip call directly to the database...                                                         //couldn't use the query created by dynamic linq and instead had to use the List<t> linq...
+                
                 //needed this to get the proper pagination values. by adding it here, i was hoping to optomize performance and still leverage deferred execution with the above queries
                 // and the take values below...
-                searchRecordCount = workorders.Count;
+                searchRecordCount = workorders.Count();
 
                 if (isDownloadReport)
-                    return workorders;
+                    return workorders
+                        .ToList();
                 else
-                    return workorders.Skip(DataTablesModel.iDisplayStart).Take(DataTablesModel.iDisplayLength).ToList();
+                    return workorders
+                        .Skip(DataTablesModel.iDisplayStart)
+                        .Take(DataTablesModel.iDisplayLength)
+                        .ToList();
             }
         }
     }

@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -158,6 +159,7 @@
     <Compile Include="Models\InMemoryRepositories.cs" />
     <Compile Include="Models\JQueryDataTablesModel.cs" />
     <Compile Include="Models\JQueryDataTablesModelBinder.cs" />
+    <Compile Include="Models\MySharedFunctions.cs" />
     <Compile Include="mp250db1.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -679,6 +681,7 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -690,6 +693,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="WebForm1.aspx" />
     <Content Include="Scripts\DataTables.Pipeline.js" />
+    <None Include="Properties\PublishProfiles\SharepointSVR.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

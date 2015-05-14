@@ -12,7 +12,6 @@ namespace WorkOrderWizard.Models
             WONUM = string.Empty;
             TASKDESC = string.Empty;
             ORIGINATOR = string.Empty;
-            PRIORITY = string.Empty;
 
         }
 
@@ -22,7 +21,7 @@ namespace WorkOrderWizard.Models
         public string TASKDESC { get; set; }
         public string[] WOTYPES { get; set; }
         public string ORIGINATOR { get; set; }
-        public string PRIORITY { get; set; }
+        public string[] PRIORITIES { get; set; }
         public DateTime REQUESTDATEGT { get; set; }
         public DateTime REQUESTDATELT { get; set; }
         public string[] STATUSES { get; set; }
