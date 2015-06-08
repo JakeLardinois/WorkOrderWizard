@@ -1693,7 +1693,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/16/2015 14:01:42</publishTime>
     </File>
     <File Include="Scripts/index.js">
-      <publishTime>05/06/2015 14:28:01</publishTime>
+      <publishTime>05/19/2015 16:05:04</publishTime>
     </File>
     <File Include="Scripts/JEditable-1.7.3/contributed/jquery.jeditable.datepicker.js">
       <publishTime>04/05/2015 06:33:27</publishTime>

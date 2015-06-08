@@ -1,6 +1,5 @@
 ﻿var anOpen = [];
 var oTable;
-var intMaxRecordCount = 1000;
 var blnCheckChanged;
 
 
@@ -67,8 +66,8 @@ $(document).ready(function () {
                       '<br><select title="Select Priority" id="WOPriority" multiple="false" required needsSelection></select>' +
                       '<br><select title="Select Type" id="WOTypes" multiple="false" required needsSelection></select>' +
                       '<br><input title="Enter Employee #..." id="EmployeeNo" type="text" placeholder="Enter Employee #..." required><label id="EmployeeName"></label><input id="EmployeeInfo" type="hidden">' +
-                      '<br><input title="Enter Title..." id="TaskDesc" type="text" maxlength="72" placeholder="Enter Title..." required>' +
-                      '<br><textarea title="Enter Work Order Notes..." id="WONotes" placeholder="Enter Work Order Notes..." required></textarea>' +
+                      '<br><input title="Describe Work Order..." id="TaskDesc" type="text" maxlength="72" placeholder="Describe Work Order..." required>' +
+                      '<br><textarea title="Enter Work Order Notes..." id="WONotes" placeholder="Enter Work Order Notes..." ></textarea>' +
                       '</form>',
                   buttons: { Next: 1, Cancel: -1 },
                   submit: function (e, v, m, f) {
@@ -81,7 +80,7 @@ $(document).ready(function () {
                           });
 
                           e.preventDefault();
-                          if ($("#WorkOrderWizardStep1").children("input, select, textarea").valid())
+                          if ($("#WorkOrderWizardStep1").children("input, select").valid()) //removed textarea from the list when I removed 'required' from the html...
                               $.prompt.goToState('state1');
                       }
 

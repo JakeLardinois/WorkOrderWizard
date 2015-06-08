@@ -85,9 +85,11 @@ namespace WorkOrderWizard.Models
 
 
             /*The Below was created because the Entity Framework had a problem doing a filter of a list with a list because of the difficulty it had using deferred execution and the corresponding sql creation*/
-            var WOTYPEList = objWorkOrderSearch.WOTYPES == null ? new[] { strEmptyString } : objWorkOrderSearch.WOTYPES.ToArray<string>();
+            var WOTYPEList = objWorkOrderSearch.WOTYPES == null ? new[] { strEmptyString } : objWorkOrderSearch.WOTYPES.ToArray<string>()
+                .Select(s => s.ToUpperInvariant()).ToArray(); //converts the list to uppercase...
             var STATUSList = objWorkOrderSearch.STATUSES == null ? new[] { strEmptyString } : objWorkOrderSearch.STATUSES.ToArray<string>();
-            var EQNUMList = objWorkOrderSearch.EQNUMS == null ? new[] { strEmptyString } : objWorkOrderSearch.EQNUMS.ToArray<string>();
+            var EQNUMList = objWorkOrderSearch.EQNUMS == null ? new[] { strEmptyString } : objWorkOrderSearch.EQNUMS.ToArray<string>()
+                .Select(s => s.ToUpperInvariant()).ToArray();
             //var PRIORITYList = objWorkOrderSearch.PRIORITIES == null ? new[] { (double?)null } : Array.ConvertAll(objWorkOrderSearch.PRIORITIES.ToArray<string>(), MySharedFunctions.TryParseNullableDouble);
             var PRIORITYList = objWorkOrderSearch.PRIORITIES == null ? new[] { 0.0 } : Array.ConvertAll(objWorkOrderSearch.PRIORITIES.ToArray<string>(), double.Parse);
 
@@ -102,7 +104,7 @@ namespace WorkOrderWizard.Models
                     .Where(c => c.w.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
                     .Where(c => c.w.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.w.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
-                    .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE))
+                    .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.w.WOTYPE.ToUpper()))
                     .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.w.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
                     //.Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
                     //.Where(c => PRIORITYList.Contains(strEmptyString) || PRIORITYList.Contains(((int)c.w.PRIORITY).ToString()))
@@ -111,7 +113,8 @@ namespace WorkOrderWizard.Models
                     .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
                     .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
                     .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                    .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM))
+                    .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM.ToUpper()))
+                    //.Where(e => EQNUMList.Contains(strEmptyString) || e.we.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
                     //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
                     .Select(c => c.w)
                     .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query

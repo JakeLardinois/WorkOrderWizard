@@ -1,14 +1,73 @@
+When a Work Order gets it's status changed to 'Completed', MP2 updates the records COMPLETIONDATE & COMPLETIONTIME fields to the current date and time.
+
 Whenever a work order gets 'Closed' in MP2, it's status gets updated to 'C' (Completed). If the COMPLETIONDATE & COMPLETIONTIME fields are null, then they will also get updated with the current date and time
 	however, if COMPLETIONDATE & COMPLETIONTIME are NOT null, then they are NOT updated.
 
-When a Work Order gets it's status changed to 'Completed', MP2 updates the records COMPLETIONDATE & COMPLETIONTIME fields to the current date and time.
-
-In order for a work order to get placed into 'Work Order History', it must have a 'CLOSEDATE' value of 1/1/1900 and a Null 'COMPLETIONDATE' & 'COMPLETIONTIME'
-
+In order for a work order to get placed into 'Work Order History', it must have a 'CLOSEDATE' value other than 1/1/1900 AND NOT a Null 'COMPLETIONDATE' & 'COMPLETIONTIME'
 
 What are Work Order Statuses of 'M' for?
 
-1/6/2004  12:00:00 AM
+Database Modifications:
+	-Added 'Long Text' field named NOTES to WO
+		"ALTER TABLE WO ADD COLUMN NOTES LONGTEXT"
+	-needed to alter WO table
+		"ALTER TABLE WO ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL
+		To remove the constraint:
+			Import WO table from the unaltered database; it'll be named WO1 to avoid a duplicate name.
+				C:\Users\JakeL\Desktop\OffSiteCS\WorkOrderWizard\WorkOrderWizard\App_Data\mp250db.mdb
+			Delete all the records from WO1
+				"DELETE * FROM WO1"
+			Add the NOTES field to WO1 
+				"ALTER TABLE WO1 ADD COLUMN NOTES LONGTEXT"
+			Copy all the records from WO into WO1
+				"INSERT INTO WO1 SELECT * FROM WO"
+			Close the table and then re-open the table
+			Delete/Remove the WO table
+			Close the table and then re-open the table
+			Rename WO1 table to WO
+	-needed to alter WOEQLIST table
+		"ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
+		To remove the constraint:
+			Import WOEQLIST table from the unaltered database; it'll be named WOEQLIST1 to avoid a duplicate name.
+				C:\Users\JakeL\Desktop\OffSiteCS\WorkOrderWizard\WorkOrderWizard\App_Data\mp250db.mdb
+			Delete all the records from WOEQLIST1
+				"DELETE * FROM WOEQLIST1"
+			Copy all the records from WOEQLIST into WOEQLIST1
+				"INSERT INTO WOEQLIST1 SELECT * FROM WOEQLIST"
+			Close the table and then re-open the table
+			Delete the WOEQLIST table
+			Close the table and then re-open the table
+			Rename WOEQLIST1 table to WOEQLIST
+			
+Equipment 'Work Order Cost Summary' report error issue is solved by reselecting the equipment in MP2.
+	-Note that I had an issue running the report for 5-11-2015, but could resolve the problem until I fixed the WO with a CLOSEDATE of 5-12-2015...
+	-I had another issue where I couldn't run the report for 4-8-2015 because of a work order with a CLOSEDATE of 4-14-2015...
+	-close date 4/24/2015 would only work when I deleted a work order with a close date of 4/27/2015
+
+SELECT WO.WONUM, WO.CLOSEDATE, WOEQLIST.WONUM, WOEQLIST.CLOSEDATE
+FROM WO LEFT JOIN WOEQLIST ON WO.WONUM = WOEQLIST.WONUM 
+WHERE WO.CLOSEDATE <> WOEQLIST.CLOSEDATE
+
+SELECT *
+FROM WOEQLIST
+WHERE CLOSEDATE >= #5/1/2015#  AND CLOSEDATE <= #5/21/2015# AND WONUM LIKE 'WZ*'
+ORDER BY WONUM
+
+SELECT *
+FROM WOEQLIST
+WHERE CLOSEDATE = #5/5/2015#  AND WONUM LIKE 'WZ*'
+ORDER BY WONUM
+0100019580
+0100019579
+
+			"ALTER TABLE WO DROP COLUMN CLOSEDATE"
+			"ALTER TABLE WO ADD COLUMN CLOSEDATE DATETIME"
+    .execute "UPDATE TABLE clients SET state = newstate"
+	-WO 'CLOSEDATE'  was made not nullable
+
+To view all relationships in an Access Db
+	SELECT * FROM MsysRelationships
+
 
 
 SELECT WO.WONUM, WO.CLOSEDATE, WO.PRINTIT, WO.TASKNUM, WO.RESPONSEDAYS, WO.RESPONSEHRS, WO.ACTUALDURATION, WO.TASKDESC, WO.WOTYPE, WO.SCHEDSTARTDATE, WO.SCHEDFINISHDATE, WO.ASSIGNEDTO, WO.PRIORITY, WO.WORKPRIORITY, WO.STATUS, WO.DELAYDESC, WO.EXPENSECLASS, WO.REQUESTTIME, WO.REQUESTDATE, WO.EXT, WO.PHONE, WO.ORIGINATOR, WO.COMPLETIONDATE, WO.COMPLETIONTIME, WO.PERFBYWARRANTY, WO.ASSIGNEDBY, WO.PICKLIST, WO.ESTDURATION, WO.RESPONSEMINS, WO.TENANT, WO.ESTCOST, WO.BILLABLE, WO.LABORTAXRATE, WO.MATERIALTAXRATE, WO.LABORMARKUP, WO.MATERIALMARKUP, WO.SCHEDSTARTTIME, WO.FAXNUM, WO.RESTORED, WO.ATFIRSTNAME, WO.ATLASTNAME, WO.ABFIRSTNAME, WO.ABLASTNAME, WO.ORGFIRSTNAME, WO.ORGLASTNAME
