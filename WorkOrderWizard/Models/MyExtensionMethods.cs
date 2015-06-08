@@ -9,6 +9,7 @@ namespace WorkOrderWizard.Models
 {
     public static class MyExtensionMethods
     {
+
         /*public static double? TryParse(this double? source)
         {
             double dblTemp;

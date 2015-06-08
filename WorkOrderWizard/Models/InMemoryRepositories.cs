@@ -96,7 +96,7 @@ namespace WorkOrderWizard.Models
             using (var db = new mp250dbDB())
             {
                 workorders = db.WOes
-                    .Join(db.WOEQLISTs,
+                    .GroupJoin(db.WOEQLISTs,
                     w => new { w.WONUM, CloseDate = w.CLOSEDATE },
                     we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
                     (w, we) => new { w, we })
@@ -113,9 +113,10 @@ namespace WorkOrderWizard.Models
                     .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
                     .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
                     .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                    .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM.ToUpper()))
+                    //.Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM.ToUpper()))
                     //.Where(e => EQNUMList.Contains(strEmptyString) || e.we.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
-                    //.Where(c => EQNUMList.Contains(strEmptyString) || c.WOEQLIST.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
+                    //.Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Intersect(e.we.Select(n => n.EQNUM)).Any())
+                    .Where(e => EQNUMList.Contains(strEmptyString) || e.we.Where(x => EQNUMList.Contains(x.EQNUM)).Any())
                     .Select(c => c.w)
                     .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
                     .Select(g => new WO
@@ -134,7 +135,7 @@ namespace WorkOrderWizard.Models
                         COMPLETIONDATE = g.COMPLETIONDATE,
                         COMPLETIONTIME = g.COMPLETIONTIME
                     })
-                    .Distinct()
+                    //.Distinct() //no longer necessary with GroupJoin...
                     //.Where(c => Math.Truncate(c.PRIORITY.GetValueOrDefault()) == 1)
                     .Where(c => PRIORITYList.Contains(0) || PRIORITYList.Contains(Math.Truncate(c.PRIORITY.GetValueOrDefault())));
                     //.ToList()//my pagination didn't work properly without this; some problem with .skip call directly to the database...                                                         //couldn't use the query created by dynamic linq and instead had to use the List<t> linq...
