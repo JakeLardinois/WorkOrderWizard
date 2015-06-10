@@ -95,8 +95,64 @@ namespace WorkOrderWizard.Models
 
             using (var db = new mp250dbDB())
             {
-                workorders = db.WOes
-                    .GroupJoin(db.WOEQLISTs,
+                workorders = db.WOes.SelectMany(
+                    w => db.WOEQLISTs
+                    .Where(we => w.WONUM == we.WONUM && w.CLOSEDATE == we.CLOSEDATE)
+                    .DefaultIfEmpty(),
+                    (w, we) => new
+                    {
+                        WONUM = w.WONUM,
+                        CLOSEDATE = w.CLOSEDATE,
+                        ORIGINATOR = w.ORIGINATOR,
+                        PRIORITY = w.PRIORITY,
+                        REQUESTDATE = w.REQUESTDATE,
+                        REQUESTTIME = w.REQUESTTIME,
+                        TASKDESC = w.TASKDESC,
+                        DELAYDESC = w.DELAYDESC,
+                        NOTES = w.NOTES,
+                        WOTYPE = w.WOTYPE,
+                        STATUS = w.STATUS,
+                        COMPLETIONDATE = w.COMPLETIONDATE,
+                        COMPLETIONTIME = w.COMPLETIONTIME,
+                        EQNUM = we.EQNUM
+                    })
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.WONUM) || c.WONUM.ToUpper().Contains(objWorkOrderSearch.WONUM.ToUpper()))
+                    .Where(c => c.CLOSEDATE >= objWorkOrderSearch.CLOSEDATEGT || objWorkOrderSearch.CLOSEDATEGT == DateTime.MinValue)
+                    .Where(c => c.CLOSEDATE <= objWorkOrderSearch.CLOSEDATELT || objWorkOrderSearch.CLOSEDATELT == DateTime.MinValue)
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.TASKDESC) || c.TASKDESC.ToUpper().Contains(objWorkOrderSearch.TASKDESC.ToUpper()))
+                    .Where(c => WOTYPEList.Contains(strEmptyString) || WOTYPEList.Contains(c.WOTYPE.ToUpper()))
+                    .Where(c => string.IsNullOrEmpty(objWorkOrderSearch.ORIGINATOR) || c.ORIGINATOR.ToUpper().Contains(objWorkOrderSearch.ORIGINATOR.ToUpper()))
+                    //.Where(c => string.IsNullOrEmpty(objWorkOrderSearch.PRIORITY) || (int)c.w.PRIORITY == (int.TryParse(objWorkOrderSearch.PRIORITY, out intTemp) ? intTemp : 0))
+                    //.Where(c => PRIORITYList.Contains(strEmptyString) || PRIORITYList.Contains(((int)c.w.PRIORITY).ToString()))
+                    .Where(c => c.REQUESTDATE >= objWorkOrderSearch.REQUESTDATEGT || objWorkOrderSearch.REQUESTDATEGT == DateTime.MinValue)
+                    .Where(c => c.REQUESTDATE <= objWorkOrderSearch.REQUESTDATELT || objWorkOrderSearch.REQUESTDATELT == DateTime.MinValue)
+                    .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.STATUS + string.Empty))
+                    .Where(c => c.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
+                    .Where(c => c.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
+                    .Where(c => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(c.EQNUM.ToUpper()))
+                    .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
+                    .Where(c => PRIORITYList.Contains(0) || PRIORITYList.Contains(Math.Truncate(c.PRIORITY.GetValueOrDefault())))
+                    .Select(g => new WO
+                    {
+                        WONUM = g.WONUM,
+                        CLOSEDATE = g.CLOSEDATE,
+                        ORIGINATOR = g.ORIGINATOR,
+                        PRIORITY = g.PRIORITY,
+                        REQUESTDATE = g.REQUESTDATE,
+                        REQUESTTIME = g.REQUESTTIME,
+                        TASKDESC = g.TASKDESC,
+                        DELAYDESC = g.DELAYDESC,
+                        NOTES = g.NOTES,
+                        WOTYPE = g.WOTYPE,
+                        STATUS = g.STATUS,
+                        COMPLETIONDATE = g.COMPLETIONDATE,
+                        COMPLETIONTIME = g.COMPLETIONTIME
+                    })
+                    .Distinct();
+
+
+                /*workorders = db.WOes
+                    .Join(db.WOEQLISTs,
                     w => new { w.WONUM, CloseDate = w.CLOSEDATE },
                     we => new { we.WONUM, CloseDate = we.CLOSEDATE }, //needed to alter WOEQLIST table with "ALTER TABLE WOEQLIST ALTER COLUMN CLOSEDATE DATETIME CONSTRAINT ConditionRequired NOT NULL"
                     (w, we) => new { w, we })
@@ -113,10 +169,11 @@ namespace WorkOrderWizard.Models
                     .Where(c => STATUSList.Contains(strEmptyString) || STATUSList.Contains(c.w.STATUS + string.Empty))
                     .Where(c => c.w.COMPLETIONDATE >= objWorkOrderSearch.COMPLETIONDATEGT || objWorkOrderSearch.COMPLETIONDATEGT == DateTime.MinValue)
                     .Where(c => c.w.COMPLETIONDATE <= objWorkOrderSearch.COMPLETIONDATELT || objWorkOrderSearch.COMPLETIONDATELT == DateTime.MinValue)
-                    //.Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM.ToUpper()))
+                    .Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Contains(e.we.EQNUM.ToUpper()))
                     //.Where(e => EQNUMList.Contains(strEmptyString) || e.we.Select(n => n.EQNUM).Intersect(EQNUMList).Any())
                     //.Where(e => EQNUMList.Contains(strEmptyString) || EQNUMList.Intersect(e.we.Select(n => n.EQNUM)).Any())
-                    .Where(e => EQNUMList.Contains(strEmptyString) || e.we.Where(x => EQNUMList.Contains(x.EQNUM)).Any())
+                    //.Where(e => EQNUMList.Contains(strEmptyString) || e.we.Where(x => EQNUMList.Contains(x.EQNUM)).Any())
+                    //.Where(e => EQNUMList.Contains(strEmptyString) || e.we.Any(l => EQNUMList.Contains(l.EQNUM)))
                     .Select(c => c.w)
                     .OrderBy(sortedColumns[0].PropertyName + " " + sortedColumns[0].Direction) //Uses Dynamic Linq to have sorting occur in the query
                     .Select(g => new WO
@@ -139,7 +196,8 @@ namespace WorkOrderWizard.Models
                     //.Where(c => Math.Truncate(c.PRIORITY.GetValueOrDefault()) == 1)
                     .Where(c => PRIORITYList.Contains(0) || PRIORITYList.Contains(Math.Truncate(c.PRIORITY.GetValueOrDefault())));
                     //.ToList()//my pagination didn't work properly without this; some problem with .skip call directly to the database...                                                         //couldn't use the query created by dynamic linq and instead had to use the List<t> linq...
-                
+                */
+
                 //needed this to get the proper pagination values. by adding it here, i was hoping to optomize performance and still leverage deferred execution with the above queries
                 // and the take values below...
                 searchRecordCount = workorders.Count();
