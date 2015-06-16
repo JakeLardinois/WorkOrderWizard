@@ -64,7 +64,8 @@ namespace WorkOrderWizard.Controllers
         {
             var db = new SytelineDbEntities();
 
-            var strSQL = QueryDefinitions.GetQuery("SelectSLEmployeeByID", new string[] { EmployeeID.PadLeft(7) });
+            var objQueryDefs = new QueryDefinitions();
+            var strSQL = objQueryDefs.GetQuery("SelectSLEmployeeByID", new string[] { EmployeeID.PadLeft(7) });
             var objSLEmployee = db.Database.SqlQuery<Employee>(strSQL)
                 .DefaultIfEmpty(new Employee { EmployeeFound = false })
                 .FirstOrDefault();

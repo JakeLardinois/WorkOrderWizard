@@ -117,7 +117,8 @@ namespace WorkOrderWizard.Models
             var strWorkOrderPrefix = Settings.WorkOrderPrefix;
             MP2_DataBaseSettings objDb = new MP2_DataBaseSettings();
             objStrBldr.Clear();
-            objStrBldr.Append(QueryDefinitions.GetQuery("SelectCurrentWONum", new string[] { strWorkOrderPrefix }));
+            var objQueryDefs = new QueryDefinitions();
+            objStrBldr.Append(objQueryDefs.GetQuery("SelectCurrentWONum", new string[] { strWorkOrderPrefix }));
             int intTemp, intWorkOrderNum;
 
             using (objDb.OleDBConnection)
@@ -187,7 +188,8 @@ namespace WorkOrderWizard.Models
             {
                 objDb = new MP2_DataBaseSettings();
                 objStrBldr.Clear();
-                objStrBldr.Append(QueryDefinitions.GetQuery("InsertIntoWO", new string[] { WONUM, CLOSEDATE.ToString("d"), TASKDESC.EscapeSingleQuotes(), NOTES.EscapeSingleQuotes(),
+                var objQueryDefs = new QueryDefinitions();
+                objStrBldr.Append(objQueryDefs.GetQuery("InsertIntoWO", new string[] { WONUM, CLOSEDATE.ToString("d"), TASKDESC.EscapeSingleQuotes(), NOTES.EscapeSingleQuotes(),
                 WOTYPE, ORIGINATOR, PRIORITY.ToString(), string.Format("{0:G}", REQUESTTIME), string.Format("{0:d}", REQUESTDATE)}));
 
                 OleDbCommand objOleDbCommand = new OleDbCommand(objStrBldr.ToString(), objDb.OleDBConnection);
@@ -228,7 +230,8 @@ namespace WorkOrderWizard.Models
 
             //make sure to replace the single quotes with double single quotes in order to escape them
             objStrBldr.Clear();
-            objStrBldr.Append(QueryDefinitions.GetQuery("UpdateWONotes", new string[] { NOTES.EscapeSingleQuotes(), WONUM, CLOSEDATE.ToString("d") }));
+            var objQueryDefs = new QueryDefinitions();
+            objStrBldr.Append(objQueryDefs.GetQuery("UpdateWONotes", new string[] { NOTES.EscapeSingleQuotes(), WONUM, CLOSEDATE.ToString("d") }));
 
             using (db.OleDBConnection)
             {
@@ -317,7 +320,8 @@ namespace WorkOrderWizard.Models
             try
             {
                 objDb = new MP2_DataBaseSettings();
-                var strSQL = QueryDefinitions.GetQuery("InsertIntoWOEQLIST", new string[] { WONUM, string.Format("{0:d}", CLOSEDATE), EQNUM,
+                var objQueryDefs = new QueryDefinitions();
+                var strSQL = objQueryDefs.GetQuery("InsertIntoWOEQLIST", new string[] { WONUM, string.Format("{0:d}", CLOSEDATE), EQNUM,
                 LOCATION, SUBLOCATION1, SUBLOCATION2, SUBLOCATION3, DEPARTMENT, EQDESC.EscapeSingleQuotes()});
                 OleDbCommand objOleDbCommand = new OleDbCommand(strSQL, objDb.OleDBConnection);
 
