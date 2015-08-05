@@ -200,14 +200,24 @@ namespace WorkOrderWizard.Models
                 // and the take values below...
                 searchRecordCount = workorders.Count();
 
+
+                IEnumerable<WO> obj;
                 if (isDownloadReport)
-                    return workorders
+                    obj = workorders
                         .ToList();
                 else
-                    return workorders
+                    obj = workorders
                         .Skip(DataTablesModel.iDisplayStart)
                         .Take(DataTablesModel.iDisplayLength)
                         .ToList();
+
+                /*It turns out that when access is queried using any sort of aggregation operator http://allenbrowne.com/ser-63.html. I noticed this because the long notes were being stored
+                 * in the database, but were truncated when accessed. I created the .RefreshNote() method which queries the database for the specific wo note so that I could retrieve the proper
+                 * notes after my above complex query*/
+                foreach (var wo in obj)
+                    wo.RefreshNote();
+
+                return obj.ToList();
             }
         }
     }

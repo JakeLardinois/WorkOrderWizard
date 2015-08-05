@@ -71,6 +71,19 @@ namespace WorkOrderWizard.Models
             }
         }
 
+        public virtual void UpdateNote()
+        {
+            using (var db = new mp250dbDB())
+            {
+                NOTES = db.WOes.Where(w => w.WONUM.Equals(WONUM))
+                    .DefaultIfEmpty(new WO { NOTES = string.Empty })
+                    .SingleOrDefault()
+                    .NOTES;
+            }
+
+            
+        }
+
         public virtual int? DaysOpen { //the int is made nullable so that it can be excluded from the pivot table calculation when invalid data is encountered
             get
             {

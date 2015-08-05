@@ -79,10 +79,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/09/2015 09:56:39</publishTime>
     </File>
     <File Include="bin/WorkOrderWizard.dll">
-      <publishTime>06/16/2015 12:00:14</publishTime>
+      <publishTime>08/04/2015 22:24:51</publishTime>
     </File>
     <File Include="bin/WorkOrderWizard.pdb">
-      <publishTime>06/16/2015 12:00:14</publishTime>
+      <publishTime>08/04/2015 22:24:51</publishTime>
     </File>
     <File Include="Content/html5-reset.css">
       <publishTime>03/01/2014 08:20:36</publishTime>
