@@ -223,16 +223,17 @@ $(document).ready(function () {
 
     $("#REQUESTDATEFromFilter").datepicker();
     $("#REQUESTDATEToFilter").datepicker();
-    $("#CLOSEDATEFromFilter").datepicker();
-    $("#CLOSEDATEToFilter").datepicker();
+    $("#CLOSEDATEFromFilter").datepicker().datepicker('setDate', new Date(1900, 0, 1));
+    $("#CLOSEDATEToFilter").datepicker().datepicker('setDate', new Date(1900, 0, 1));
     $("#COMPLETIONDATEFromFilter").datepicker();
     $("#COMPLETIONDATEToFilter").datepicker();
 
-    $("#STATUSFilter").append("<option selected=\"selected\" value=\"O\">Open</option>");
+    //$("#STATUSFilter").append("<option selected=\"selected\" value=\"O\">Open</option>");
+    $("#STATUSFilter").append("<option value=\"O\">Open</option>");
     $("#STATUSFilter").append("<option value=\"R\">Ready</option>");
     $("#STATUSFilter").append("<option value=\"H\">Hold</option>");
     $("#STATUSFilter").append("<option value=\"C\">Completed</option>");
-    //$("#STATUSFilter").append("<option value=\"M\">Unknown</option>");
+    $("#STATUSFilter").append("<option value=\"M\">Unknown</option>");
     $("#STATUSFilter").multiselect({
         multiple: true,
         hide: "explode",
@@ -524,6 +525,12 @@ $(document).ready(function () {
                 "render": function (data, type, full, meta) {
                     return FormatTime(data);
                 }
+            },
+            {
+                "mDataProp": "CLOSEDATE",
+                "render": function (data, type, full, meta) {
+                    return FormatDate(data);
+                }
             }]
     });
 
@@ -767,7 +774,7 @@ function AppendAdditionalParameters(aoData) {
     * I had previously implemented this in the server side code, but then any time my UI changed I would need to recompile the web service... So I fixed the implementation...*/
     aoData.push({
         "name": "FixedColumnHeaders",
-        "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "COMPLETIONDATE"]
+        "value": ["WONUM", "WOEQLIST", "0", "STATUS", "PRIORITY", "WOTYPE", "ORIGINATOR", "REQUESTDATE", 0, "COMPLETIONDATE", 0, "CLOSEDATE"]
     });
 
     /*iterates through the array and updates the appropriate object using the below 'case' statements. I was having an issue where sSearch was getting populated twice (ie sSearch_4 & sSearch_7 would contain the same search string) 
@@ -838,6 +845,13 @@ function AppendAdditionalParameters(aoData) {
                         $('#COMPLETIONDATEToFilter').val();
                 break;
             case "bRegex_9":
+                aoData[i].value = true;
+                break;
+            case "sSearch_11":
+                aoData[i].value = $('#CLOSEDATEFromFilter').val() + '~' +
+                        $('#CLOSEDATEToFilter').val();
+                break;
+            case "bRegex_11":
                 aoData[i].value = true;
                 break;
             case "sSearch": //I set the sSearch variable so that I can easily grab the value from the controller to filter my initial WO list. UPDATE- No longer implemented...

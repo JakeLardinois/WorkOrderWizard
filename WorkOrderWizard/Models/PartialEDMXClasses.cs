@@ -71,7 +71,7 @@ namespace WorkOrderWizard.Models
             }
         }
 
-        public virtual void UpdateNote()
+        public virtual void RefreshNote()
         {
             using (var db = new mp250dbDB())
             {
