@@ -41,3 +41,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+/WorkOrderWizard/bin
+/WorkOrderWizard/obj
+
+/WorkOrderWizard/mp250db.tt
+
+/WorkOrderWizard/App_Data/mp250db.mdb
+
+/WorkOrderWizard/Web.config
+/WorkOrderWizard/Web.Debug.config
+/WorkOrderWizard/Web.Release.config
