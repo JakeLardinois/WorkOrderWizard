@@ -47,7 +47,7 @@ Temporary Items
 
 /WorkOrderWizard/mp250db.tt
 
-/WorkOrderWizard/App_Data/mp250db.mdb
+/WorkOrderWizard/App_Data/*.*
 
 /WorkOrderWizard/Web.config
 /WorkOrderWizard/Web.Debug.config
