@@ -148,6 +148,17 @@ namespace WorkOrderWizard.Models {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT emp_num, name
+        ///FROM employee
+        ///WHERE emp_num IN (~p0).
+        /// </summary>
+        internal static string SelectSLEmployeesByList {
+            get {
+                return ResourceManager.GetString("SelectSLEmployeesByList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT COUNT(*) AS TotalWorkOrders
         ///FROM WO.
         /// </summary>

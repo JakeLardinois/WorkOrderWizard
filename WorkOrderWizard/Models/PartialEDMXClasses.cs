@@ -14,6 +14,7 @@ namespace WorkOrderWizard.Models
         private StringBuilder objStrBldr = new StringBuilder();
         private List<WOEQLIST> mWOEQLIST { get; set; }
         public List<WOEQLIST> WOEQToAdd { get; set; }
+        public string ORIGINATORName { get; set; }
 
         public WO()
             :base()

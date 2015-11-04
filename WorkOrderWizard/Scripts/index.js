@@ -501,7 +501,10 @@ $(document).ready(function () {
             { "mDataProp": "STATUS" },
             { "mDataProp": "PRIORITY" },
             { "mDataProp": "WOTYPE" },
-            { "mDataProp": "ORIGINATOR" },
+            {
+                "mDataProp": "ORIGINATORName",
+                "bSortable": false
+            },
             {
                 "mDataProp": "REQUESTDATE",
                 "render": function (data, type, full, meta) {

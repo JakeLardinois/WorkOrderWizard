@@ -8,6 +8,7 @@ using System.Data.OleDb;
 using System.Text;
 using System.Linq.Dynamic;
 using System.Data.Objects.SqlClient;
+using System.Text.RegularExpressions;
 
 
 namespace WorkOrderWizard.Models
@@ -217,8 +218,64 @@ namespace WorkOrderWizard.Models
                 foreach (var wo in obj)
                     wo.RefreshNote();
 
+
+                if (obj.Count() > 0)
+                    AddOriginatorNames(obj);
+
                 return obj.ToList();
             }
+        }
+        private static void AddOriginatorNames(IEnumerable<WO> obj)
+        {
+            var objQueryDefs = new QueryDefinitions();
+            StringBuilder objStrBldr = new StringBuilder();
+
+
+            var Emps = obj
+                .GroupBy(e => e.ORIGINATOR)
+                .Select(e => new Employee { 
+                    emp_num = string.IsNullOrEmpty(e.Key) ? string.Empty : e.Key, 
+                    OrigEmpNum = string.IsNullOrEmpty(e.Key) ? string.Empty : e.Key, 
+                    name = string.Empty })
+                .ToList();
+            Emps //removes A or Z from the begining of the employee number...
+                .ForEach(e => e.emp_num = string.IsNullOrEmpty(e.emp_num) ? string.Empty : Regex.Replace(e.emp_num, "^A|^Z", string.Empty));
+            Emps //removes leading zeros from the employee number
+                .ForEach(e => e.emp_num = string.IsNullOrEmpty(e.emp_num) ? string.Empty : Regex.Replace(e.emp_num, "^0+(?!$)", string.Empty));
+            Emps //pad left for lookup in Syteline
+                .ForEach(e => e.emp_num = string.IsNullOrEmpty(e.emp_num) ? string.Empty : e.emp_num.PadLeft(7, ' '));
+
+            objStrBldr.Clear();
+            foreach (var objEmp in Emps)
+                objStrBldr.Append("'" + objEmp.emp_num + "', ");
+
+            var strSQL = objQueryDefs.GetQuery("SelectSLEmployeesByList", new string[] { objStrBldr.Remove(objStrBldr.Length - 2, 2).ToString() });
+            using (var SLDb = new SytelineDbEntities())
+            {
+                var SLEmps = SLDb.Database
+                    .SqlQuery<Employee>(strSQL);
+
+                foreach (var objEmp in Emps)
+                    objEmp.name = SLEmps
+                        .Where(e => e.emp_num.Equals(objEmp.emp_num))
+                        .DefaultIfEmpty(new Employee { name = "Not Found"})
+                        .SingleOrDefault()
+                        .name;
+            }
+
+            foreach (var objWO in obj)
+            {
+                if (string.IsNullOrEmpty(objWO.ORIGINATOR))
+                    objWO.ORIGINATORName = "Originator Not Listed";
+                else
+                    objWO.ORIGINATORName = Emps
+                    .Where(e => e.OrigEmpNum.Equals(objWO.ORIGINATOR))
+                    .DefaultIfEmpty(new Employee { name = "Not Found" })
+                    .SingleOrDefault().name;
+
+            }
+                
+                
         }
     }
 }

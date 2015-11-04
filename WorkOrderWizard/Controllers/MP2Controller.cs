@@ -117,11 +117,14 @@ namespace WorkOrderWizard.Controllers
         [HttpPost]
         public JsonResult GetWorkOrders(JQueryDataTablesModel jQueryDataTablesModel)
         {
+
             int totalRecordCount, searchRecordCount;
             var result = new JsonResult();
 
 
             var objItems = InMemoryWorkOrdersRepository.GetWorkOrders(searchRecordCount: out searchRecordCount, DataTablesModel: jQueryDataTablesModel);
+
+            
 
             //result.MaxJsonLength = Int32.MaxValue;  //took care of the error "Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property"
             result.Data = new                       //that occurred when pagination was disabled. I reenabled pagination 

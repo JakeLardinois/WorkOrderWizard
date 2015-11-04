@@ -19,6 +19,7 @@ namespace WorkOrderWizard.Models
         public string mi { get; set; }
 
         public bool EmployeeFound { get; set; }
+        public string OrigEmpNum { get; set; }
     }
 
 

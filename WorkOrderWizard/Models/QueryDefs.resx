@@ -157,6 +157,11 @@ WHERE INSERVICE = 'Y'</value>
 FROM employee
 WHERE emp_num = '~p0' and term_date IS NULL</value>
   </data>
+  <data name="SelectSLEmployeesByList" xml:space="preserve">
+    <value>SELECT emp_num, name
+FROM employee
+WHERE emp_num IN (~p0)</value>
+  </data>
   <data name="SelectTotalWOCount" xml:space="preserve">
     <value>SELECT COUNT(*) AS TotalWorkOrders
 FROM WO</value>
