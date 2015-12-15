@@ -102,7 +102,7 @@ $(document).ready(function () {
                       else if (v == 0) { }
                       else if (v == 1) {
                           $('#WorkOrderWizardStep2').validate({
-                              ignore: ':hidden:not("#WOEquipment")', //Tells it to ignore hidden fields except for the ones with id WOPriority and WOTypes
+                              ignore: ':hidden:not("#WOEquipment")', //Tells it to ignore hidden fields except for the one with id WOEquipment
                               //errorClass: 'invalid',
                               errorLabelContainer: $("#WorkOrderWizardStep2 div.error")
                           });
