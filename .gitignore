@@ -3,7 +3,7 @@
 
 /WorkOrderWizard/bin
 /WorkOrderWizard/obj
-/WorkOrderWizard/*.config
+.config
 
 # User-specific files
 *.suo
