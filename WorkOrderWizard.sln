@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkOrderWizard", "WorkOrderWizard\WorkOrderWizard.csproj", "{B0B960D9-3E05-430F-909A-A1364B75096B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkOrderWizard.Tests", "WorkOrderWizard.Tests\WorkOrderWizard.Tests.csproj", "{399916B1-6FC0-43BC-9077-89DD21D0E121}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{B0B960D9-3E05-430F-909A-A1364B75096B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0B960D9-3E05-430F-909A-A1364B75096B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0B960D9-3E05-430F-909A-A1364B75096B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{399916B1-6FC0-43BC-9077-89DD21D0E121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{399916B1-6FC0-43BC-9077-89DD21D0E121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{399916B1-6FC0-43BC-9077-89DD21D0E121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{399916B1-6FC0-43BC-9077-89DD21D0E121}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

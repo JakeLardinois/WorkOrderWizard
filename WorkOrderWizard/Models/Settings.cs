@@ -11,7 +11,7 @@ namespace WorkOrderWizard.Models
 {
     public class MP2_DataBaseSettings
     {
-        
+
         public MP2_DataBaseSettings()
         {
             //string strSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
@@ -21,6 +21,21 @@ namespace WorkOrderWizard.Models
         //private static string mstrSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
         //public static string ConnectionString { get { return mstrSQLConnectionString.Replace("|DataDirectory|", AppDomain.CurrentDomain.GetData("DataDirectory").ToString()); } }
         public static string ConnectionString { get { return System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString; } }
+        public OleDbConnection OleDBConnection { get; set; }
+    }
+
+    public class MP2WriteDb_DataBaseSettings
+    {
+
+        public MP2WriteDb_DataBaseSettings()
+        {
+            //string strSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
+            OleDBConnection = new OleDbConnection(ConnectionString);
+        }
+
+        //private static string mstrSQLConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["mp250db"].ConnectionString;
+        //public static string ConnectionString { get { return mstrSQLConnectionString.Replace("|DataDirectory|", AppDomain.CurrentDomain.GetData("DataDirectory").ToString()); } }
+        public static string ConnectionString { get { return System.Configuration.ConfigurationManager.ConnectionStrings["mp250dbWrite"].ConnectionString; } }
         public OleDbConnection OleDBConnection { get; set; }
     }
 

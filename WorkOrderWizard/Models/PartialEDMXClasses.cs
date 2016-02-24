@@ -76,10 +76,18 @@ namespace WorkOrderWizard.Models
         {
             using (var db = new mp250dbDB())
             {
-                NOTES = db.WOes.Where(w => w.WONUM.Equals(WONUM))
-                    .DefaultIfEmpty(new WO { NOTES = string.Empty })
-                    .SingleOrDefault()
-                    .NOTES;
+                //NOTES = db.WOes.Where(w => w.WONUM.Equals(WONUM))
+                //    .DefaultIfEmpty(new WO { NOTES = string.Empty })
+                //    .SingleOrDefault()
+                //    .NOTES;
+                var WOs = db.WOes.Where(w => w.WONUM.Equals(WONUM))
+                    .DefaultIfEmpty(new WO {NOTES = string.Empty});
+
+                NOTES = string.Empty;
+                foreach (var wo in WOs)
+                {
+                    NOTES += wo.NOTES;
+                }
             }
 
             
@@ -129,7 +137,7 @@ namespace WorkOrderWizard.Models
         public string GetNextWorkOrderNum()
         {
             var strWorkOrderPrefix = Settings.WorkOrderPrefix;
-            MP2_DataBaseSettings objDb = new MP2_DataBaseSettings();
+            MP2WriteDb_DataBaseSettings objDb = new MP2WriteDb_DataBaseSettings();
             objStrBldr.Clear();
             var objQueryDefs = new QueryDefinitions();
             objStrBldr.Append(objQueryDefs.GetQuery("SelectCurrentWONum", new string[] { strWorkOrderPrefix }));
@@ -195,12 +203,12 @@ namespace WorkOrderWizard.Models
         public QueryStatus Insert()
         {
             int intRecordsAffected = 0;
-            MP2_DataBaseSettings objDb;
+            MP2WriteDb_DataBaseSettings objDb;
 
 
             try
             {
-                objDb = new MP2_DataBaseSettings();
+                objDb = new MP2WriteDb_DataBaseSettings();
                 objStrBldr.Clear();
                 var objQueryDefs = new QueryDefinitions();
                 objStrBldr.Append(objQueryDefs.GetQuery("InsertIntoWO", new string[] { WONUM, CLOSEDATE.ToString("d"), TASKDESC.EscapeSingleQuotes(), NOTES.EscapeSingleQuotes(),
@@ -238,7 +246,7 @@ namespace WorkOrderWizard.Models
 
         public bool UpdateWONote()
         {
-            MP2_DataBaseSettings db = new MP2_DataBaseSettings();
+            MP2WriteDb_DataBaseSettings db = new MP2WriteDb_DataBaseSettings();
             int intRecordsAffected = 0;
 
 
@@ -328,12 +336,12 @@ namespace WorkOrderWizard.Models
         public QueryStatus Insert()
         {
             int intRecordsAffected = 0;
-            MP2_DataBaseSettings objDb;
+            MP2WriteDb_DataBaseSettings objDb;
 
 
             try
             {
-                objDb = new MP2_DataBaseSettings();
+                objDb = new MP2WriteDb_DataBaseSettings();
                 var objQueryDefs = new QueryDefinitions();
                 var strSQL = objQueryDefs.GetQuery("InsertIntoWOEQLIST", new string[] { WONUM, string.Format("{0:d}", CLOSEDATE), EQNUM,
                 LOCATION, SUBLOCATION1, SUBLOCATION2, SUBLOCATION3, DEPARTMENT, EQDESC.EscapeSingleQuotes()});
